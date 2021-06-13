@@ -1,16 +1,21 @@
-import markers from './testdata.json';
+import izhevskBorders from 'data/izhevskBorders.json';
+import pointsBig from './testdataBig.json';
+import points from './testdata.json';
 
-const geoPoints = markers.features.map((f) => f.geometry.coordinates.reverse());
-const getGeoPointsW = () => geoPoints.map(
-  ([lat, lon]) => [lon, lat, Math.floor(Math.random() * 256)],
+const geoPoints = points.features.map((f) => f.geometry.coordinates);
+const getGeoPointsW = (maxValue) => geoPoints.map(
+  (p) => [...p, Math.floor(Math.random() * maxValue)],
 );
 
-// https://stackoverflow.com/questions/1185408/converting-from-longitude-latitude-to-cartesian-coordinates
-// earh radius for conversion
-const R = 6357;
-const xyzPoints = geoPoints.map(([lon, lat]) => [
-  R * Math.cos(lat) * Math.cos(lon), // x
-  R * Math.cos(lat) * Math.sin(lon), // y
-]);
+const geoPointsBig = pointsBig.features.map((f) => f.geometry.coordinates);
+const geoPointsBigW = (maxValue) => geoPointsBig.map(
+  (p) => [...p, Math.floor(Math.random() * maxValue)],
+);
 
-export { geoPoints, getGeoPointsW, xyzPoints };
+const getIzhevskBorders = () => izhevskBorders.map(
+  (p) => [...p],
+);
+
+export {
+  geoPoints, getGeoPointsW, geoPointsBigW, getIzhevskBorders,
+};

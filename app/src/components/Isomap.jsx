@@ -1,8 +1,8 @@
-import { geoContour } from 'd3-geo-voronoi';
 import polygonSmooth from '@turf/polygon-smooth';
-import { scaleSequential, interpolateCool } from 'd3';
-import { GeoJSON, Popup, FeatureGroup } from 'react-leaflet';
+import { geoContour } from 'd3-geo-voronoi';
+import { magama } from 'helpers/colorScheme';
 import PropTypes from 'prop-types';
+import { FeatureGroup, GeoJSON, Popup } from 'react-leaflet';
 
 const Isomap = ({
   borders, data, colorScale, configureContour, smooth,
@@ -26,18 +26,8 @@ const Isomap = ({
       .flat(2)
       .every((crv) => typeof crv !== 'undefined'));
 
-  // const onEachFeature = (feature, layer) => {
-  //   const { value } = feature.properties;
-  //   const i = value % 10;
-  //   // eslint-disable-next-line no-nested-ternary
-  //   const l = i === 0.2 ? 1 : i % 2 === 0 ? 0.05 : 0;
-  //   layer.options.fillOpacity = 0.1;
-  //   layer.options.weight = l;
-  //   // layer.bindPopup(value.toString());
-  // };
-
   return (
-    <FeatureGroup>
+    <FeatureGroup key={JSON.stringify(input)}>
       {smoothen.map((f) => {
         const isoline = f.features[0];
         const { value } = isoline.properties;
@@ -49,7 +39,7 @@ const Isomap = ({
             data={isoline}
             style={{
               color: colorScale(value),
-              fillOpacity: 0.1,
+              fillOpacity: 0.12,
               weight: 0.05,
             }}
           >
@@ -74,8 +64,8 @@ Isomap.propTypes = {
 };
 
 Isomap.defaultProps = {
-  colorScale: scaleSequential(interpolateCool).domain([0, 255]),
-  configureContour: (geoContourToConfigure) => geoContourToConfigure.thresholds(9),
+  colorScale: magama([0, 255]),
+  configureContour: (geoContourToConfigure) => geoContourToConfigure.thresholds(12),
   smooth: 4,
 };
 
