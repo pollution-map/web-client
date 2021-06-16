@@ -3,24 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "typescript": "^4.3.2",
+    "@react-leaflet/core": "^1.1.0",
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@turf/polygon-smooth": "^6.3.0",
+    "@types/d3": "^6.7.0",
+    "@types/geojson": "^7946.0.7",
+    "@types/leaflet": "^1.7.2",
+    "@types/node": "^15.12.2",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
+    "@types/uuid": "^8.3.0",
     "d3": "^6.7.0",
     "d3-geo-voronoi": "^1.6.0",
     "leaflet": "^1.7.1",
+    "mobx": "^6.3.2",
+    "mobx-react-lite": "^3.2.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-leaflet": "^3.2.0",
     "react-scripts": "4.0.3",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lint": "eslint . --fix",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -42,9 +53,10 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-only-warn": "^1.0.2",
+    "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^2.3.1",
-    "typescript": "^4.3.2"
+    "prettier": "^2.3.1"
   }
 }

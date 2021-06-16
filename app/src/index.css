@@ -2,3 +2,9 @@
     padding: 0;
     margin: 0;
 }
+
+.leaflet-container .leaflet-control-attribution,
+.leaflet-container .leaflet-control-scale
+{
+    font-size: 12px !important;
+}

@@ -1,8 +1,6 @@
-import MapPage from 'pages/MapPage';
-import style from 'index.css';
+import 'index.css';
+import { MapPage } from 'pages/MapPage';
 
-const App = () => (
-  <MapPage style={style} />
-);
+const App = () => <MapPage />;
 
 export default App;
