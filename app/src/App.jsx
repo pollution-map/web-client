@@ -1,5 +1,5 @@
-import 'index.css';
-import { MapPage } from 'pages/MapPage';
+import 'src/index.css';
+import { MapPage } from 'src/pages/MapPage';
 
 const App = () => <MapPage />;
 

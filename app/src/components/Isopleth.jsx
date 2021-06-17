@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { GeoJSON } from 'react-leaflet';
-import { magama } from 'utils/colorScheme';
-import { isolines } from 'utils/isolines.ts';
+import { magama } from 'src/utils/colorScheme';
+import { isolines } from 'src/utils/isolines.ts';
 import { v4 } from 'uuid';
 
 export const Isopleth = ({

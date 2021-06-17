@@ -19,15 +19,19 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./src",
     "checkJs": false,
     "typeRoots": [
-      "src/@types"
+      "@types/*"
     ],
+    "baseUrl": "."
   },
   "include": [
-    "./src",
-    "src",
-    "src/models",
+    "public/**/*.*",
+    "public/icons/*.*",
+    "src/**/*.*",
+    "src/custom.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
   ]
 }

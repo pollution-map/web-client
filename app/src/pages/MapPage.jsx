@@ -1,5 +1,8 @@
-import { PolutionMap } from 'components/PolutionMap';
+import { PolutionMap } from 'src/components/PolutionMap';
+import { ModesProvider } from 'src/store/ModesContext';
 
 export const MapPage = () => (
-  <PolutionMap />
+  <ModesProvider>
+    <PolutionMap />
+  </ModesProvider>
 );

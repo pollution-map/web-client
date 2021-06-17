@@ -1,6 +1,7 @@
 declare module 'd3-geo-voronoi' {
   import { GeoPoint, GeoPointW } from 'geo-points';
   import { MultiPolygon } from 'geojson';
+  import { PointWeight } from 'src/@types/geo-points';
 
   interface MultiPolygonW extends MultiPolygon {
     value: PointWeight;

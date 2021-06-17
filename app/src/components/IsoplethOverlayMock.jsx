@@ -1,8 +1,8 @@
-import { Isopleth } from 'components/Isopleth';
-import { getGeoPointsW, getIzhevskBorders } from 'data/testdata.ts';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { LayersControl, useMapEvents } from 'react-leaflet';
+import { LayerGroup, useMapEvents } from 'react-leaflet';
+import { Isopleth } from 'src/components/Isopleth';
+import { getGeoPointsW, getIzhevskBorders } from 'src/data/testdata.ts';
 import { v4 } from 'uuid';
 
 export const IsoplethOverlayMock = ({ checked, name, tickS }) => {
@@ -33,9 +33,9 @@ export const IsoplethOverlayMock = ({ checked, name, tickS }) => {
   }, [isChecked]);
 
   return (
-    <LayersControl.Overlay key={v4(data)} checked={isChecked} name={name}>
+    <LayerGroup key={v4(data)} checked={isChecked} name={name}>
       <Isopleth data={data} borders={getIzhevskBorders()} />
-    </LayersControl.Overlay>
+    </LayerGroup>
   );
 };
 

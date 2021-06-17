@@ -8,3 +8,8 @@
 {
     font-size: 12px !important;
 }
+
+.leaflet-touch .leaflet-control-layers, 
+.leaflet-touch .leaflet-bar {
+    border: 0 !important;
+}

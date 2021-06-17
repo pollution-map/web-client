@@ -1,8 +1,9 @@
-import center from 'data/izhevskCenter.json';
 import 'leaflet/dist/leaflet.css';
-import 'leafletMarkerFix';
-import { LayersControl, MapContainer, TileLayer } from 'react-leaflet';
-import { IsoplethOverlayMock } from './IsoplethOverlayMock';
+import { LayerGroup, MapContainer, TileLayer } from 'react-leaflet';
+import { IsoplethOverlayMock } from 'src/components/IsoplethOverlayMock';
+import { ModesControl } from 'src/components/modes/ModesControl';
+import center from 'src/data/izhevskCenter.json';
+import 'src/leafletMarkerFix';
 
 export const PolutionMap = () => (
   <MapContainer
@@ -11,14 +12,15 @@ export const PolutionMap = () => (
     zoom={13}
     scrollWheelZoom
   >
-    <LayersControl position="topright">
+    <LayerGroup>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         // https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png
         url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
       />
-      <IsoplethOverlayMock checked name="Mock" tickS={0.5} />
-      <IsoplethOverlayMock checked name="Mock2" tickS={0.5} />
-    </LayersControl>
+      <IsoplethOverlayMock name="Mock" tickS={0.5} />
+      <IsoplethOverlayMock name="Mock2" tickS={0.5} />
+      <ModesControl />
+    </LayerGroup>
   </MapContainer>
 );

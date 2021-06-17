@@ -6,5 +6,5 @@ declare module 'geo-points' {
 
   export type PointWeight = number;
   export type GeoPointW = [Latitude, Longitude, PointWeight];
-  export type GeoPointW<V> = [Latitude, Longitude, V];
+  export type GeoPointWV<V> = [Latitude, Longitude, V];
 }
