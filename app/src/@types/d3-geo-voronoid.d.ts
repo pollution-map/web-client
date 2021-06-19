@@ -9,7 +9,7 @@ declare module 'd3-geo-voronoi' {
 
   interface ContourFN {
     (data: Array<GeoPoint | GeoPointW>): Array<MultiPolygonW>;
-    tresholds: (count: number) => ContourFN;
+    thresholds: (count: number) => ContourFN;
   }
 
   export function geoContour(): ContourFN;

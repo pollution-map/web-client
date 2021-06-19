@@ -26,10 +26,7 @@
     "baseUrl": "."
   },
   "include": [
-    "public/**/*.*",
-    "public/icons/*.*",
-    "src/**/*.*",
-    "src/custom.d.ts"
+    "./src"
   ],
   "exclude": [
     "node_modules",

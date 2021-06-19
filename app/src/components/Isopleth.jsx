@@ -21,6 +21,7 @@ export const Isopleth = ({
       color: colorScale(value),
       fillOpacity: 0.12,
       weight: 0.05,
+      transition: 'fillOpactity 1s linear',
     };
     layer.bindPopup(value.toString());
   };

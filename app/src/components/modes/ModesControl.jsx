@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import LeafletControlWrapper from 'src/components/Control.tsx';
 import { ModeButton } from 'src/components/modes/ModeButton';
-import { useModesContext } from 'src/store/ModesContext';
+import { useStore } from 'src/store/RootStoreContext';
 import styled from 'styled-components';
 
 const StyledModesControl = styled.div`
@@ -10,14 +10,14 @@ const StyledModesControl = styled.div`
 `;
 
 export const ModesControl = observer(() => {
-  const modesStore = useModesContext();
+  const { modesStore } = useStore();
 
   const onModeToggle = (mode) => {
     modesStore.toggleMode(mode);
   };
 
   return (
-    <LeafletControlWrapper position="topright">
+    <LeafletControlWrapper position="bottomleft">
       <StyledModesControl>
         {modesStore.modes.map((m) => (
           <ModeButton key={m.name} mode={m} onToggle={onModeToggle} />

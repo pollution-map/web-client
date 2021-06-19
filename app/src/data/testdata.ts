@@ -1,7 +1,7 @@
-import { GeoPoint, GeoPointW, PointWeight } from 'geo-points';
 import izhevskBorders from 'src/data/izhevskBorders.json';
 import points from 'src/data/testdata.json';
 import pointsBig from 'src/data/testdataBig.json';
+import { GeoPoint, GeoPointO, GeoPointW, PointWeight, WeightObject } from 'src/models/geo-point';
 
 const geoPoints = points.features.map((f) => f.geometry.coordinates) as Array<GeoPoint>;
 const getGeoPointsW = (maxValue: PointWeight): Array<GeoPointW> => geoPoints.map(
@@ -13,8 +13,22 @@ const geoPointsBigW = (maxValue: PointWeight): Array<GeoPointW> => geoPointsBig.
   (p) => [...p, Math.floor(Math.random() * maxValue)],
 );
 
-const getIzhevskBorders = () => izhevskBorders.map((p) => [...p],) as Array<GeoPoint>;
+const getGeoPointsO = (
+  maxValue: WeightObject
+): Array<GeoPointO<WeightObject>> =>
+  geoPoints.map((p) => [
+    ...p,
+    Object.fromEntries(
+      Object.entries(maxValue).map(([k, v]) => [k, Math.random() * v])
+    ),
+  ]);
+
+const getIzhevskBorders = () => izhevskBorders.map((p) => [...p]) as Array<GeoPoint>;
 
 export {
-  geoPoints, getGeoPointsW, geoPointsBigW, getIzhevskBorders,
+  geoPoints,
+  getGeoPointsW,
+  geoPointsBigW,
+  getGeoPointsO,
+  getIzhevskBorders,
 };
