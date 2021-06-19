@@ -11,7 +11,7 @@ export class IsolinesStore {
     private measurementsStore: IMeasurementsStore
   ) { }
   
-  get isolines(): Isolines | null {
+  get isolines(): Isolines {
     const modes = this.modesStore.modes;
     const measurements = this.measurementsStore.measurements;
     const izhevskBorders = getIzhevskBorders();

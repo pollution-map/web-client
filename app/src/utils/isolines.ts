@@ -8,7 +8,7 @@ import { Isolines } from 'src/models/isoline';
 export const isolines = (
   borders: Array<GeoPoint>,
   data: Array<GeoPointW>,
-  smooth: number = 4,
+  smooth: number = 3,
   configure: (contour: ContourFN) => ContourFN = (c) => c.thresholds(11)
 ): FeatureCollection<MultiPolygon, { value: PointWeight }> => {
   const input = [...borders, ...data];
@@ -54,13 +54,12 @@ export const comboisolines = (
   data: Array<GeoPointO<WeightObject>>,
   modes: IActiveParams,
   smooth: number = 4,
-  configure: (contour: ContourFN) => ContourFN = (c) => c.thresholds(17)
-): (Isolines | null) => {
+  configure: (contour: ContourFN) => ContourFN = (c) => c.thresholds(20)
+): Isolines => {
   const acitveModes = Object.fromEntries(
     Object.entries(modes).filter(([modeName, isActive]) => isActive)
   );
   const activeModesCount = Object.keys(acitveModes).length;
-  if (!activeModesCount) return null;
 
   const scales = Object.fromEntries(
     Object.entries(modes).map(([paramName, isActive]) => [
@@ -74,8 +73,8 @@ export const comboisolines = (
                 data.map(([lat, lon, valueObj]) => valueObj[paramName])
               ) as [minValOfParam: number, maxValOfParam: number]
             )
-            .range([0, 100]).nice()
-        : scaleLinear().range([0, 0]),
+            .range([0, 100]).nice().clamp(true)
+        : scaleLinear().range([0, 0]).clamp(true).unknown(0),
     ])
   );
 
@@ -85,9 +84,13 @@ export const comboisolines = (
     lon,
     // value = sum all values of params and divide by count of params
     // (it merges correctly because all params have been translated to [0, 100] domain)
-    Object.entries(valueObj).filter(([paramName]) => paramName in acitveModes).reduce(
-      ([, accumParamValue], [paramName, paramValue]) => ['', accumParamValue + scales[paramName](paramValue)]
-    )[1] / activeModesCount,
+    Object.entries(valueObj).filter(([paramName]) => {
+      return paramName in acitveModes;
+    }).reduce(
+      ([accumName, accumParamValue], [paramName, paramValue]) => {
+        return ['', accumParamValue +  scales[paramName](paramValue)];
+      }
+    , ['', 0])[1] / activeModesCount,
   ]) as Array<GeoPointW>;
 
   const input = [...borders, ...mergedData];
