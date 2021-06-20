@@ -1,5 +1,5 @@
 import { ViewStateProps } from '@deck.gl/core/lib/deck';
-import center from 'src/data/izhevskCenter.json';
+import center from 'src/data/izhevsk-center.json';
 
 interface InteractionState {
   inTransition?: boolean;

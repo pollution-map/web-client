@@ -7,6 +7,8 @@ import { StaticMap } from 'react-map-gl';
 import { ModesControl } from 'src/components/modes/ModesControl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
+import { useDebouncedCallback } from 'use-debounce/lib';
+import { RangesControl } from './range/RangesControl';
 import { useCameraRotation } from './transitions/useCameraRotation';
 
 // Set your mapbox access token here
@@ -47,16 +49,16 @@ export const PolutionMap = observer(() => {
     mapStore.setBaseMapInitialized();
   }, []);
 
-  const onViewStateChange = useCallback(({ viewState }) => {
+  const onViewStateChange = useDebouncedCallback(({ viewState }) => {
     mapStore.updateViewState(viewState);
-  }, []);
+  }, 100);
 
-  const onInteractionStateChange = useCallback((interactionState) => {
+  const onInteractionStateChange = useDebouncedCallback((interactionState) => {
     mapStore.updateInteractionState(interactionState);
-  }, []);
+  }, 100);
 
   useCameraRotation(9000);
-
+  
   return (
     <DeckGL
       onViewStateChange={onViewStateChange}
@@ -113,6 +115,7 @@ export const PolutionMap = observer(() => {
       <button type="button" onClick={() => mapStore.toggleIs3D()}>
         3D
       </button>
+      <RangesControl />
       <ModesControl />
     </DeckGL>
   );

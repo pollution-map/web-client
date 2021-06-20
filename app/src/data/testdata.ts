@@ -1,6 +1,6 @@
-import izhevskBorders from 'src/data/izhevskBorders.json';
+import izhevskBorders from 'src/data/izhevsk-borders.json';
 import points from 'src/data/testdata.json';
-import pointsBig from 'src/data/testdataBig.json';
+import pointsBig from 'src/data/testdata-big.json';
 import { GeoPoint, GeoPointO, GeoPointW, PointWeight, WeightObject } from 'src/models/geo-point';
 
 const geoPoints = points.features.map((f) => f.geometry.coordinates) as Array<GeoPoint>;
