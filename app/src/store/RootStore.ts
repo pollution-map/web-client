@@ -8,6 +8,7 @@ import { LayersStore } from './ui/deck/LayersStore';
 import { PickInfoStore } from './ui/deck/PickInfoStore';
 import { IsolinesStore } from './ui/IsolinesStore';
 import { ModesStore } from './ui/ModesStore';
+import { RangesStore } from './ui/RangesStore';
 
 export class RootStore {
   // -- data --
@@ -15,6 +16,7 @@ export class RootStore {
 
   // --  ui  --
   modesStore: ModesStore;
+  rangesStore: RangesStore;
   isolinesStore: IsolinesStore;
 
   // -- Deck Gl --
@@ -27,6 +29,7 @@ export class RootStore {
     this.measurementsStore = makeAutoObservable(new MockMeasurementsStore());
 
     // --  ui  --
+    this.rangesStore = makeAutoObservable(new RangesStore());
     this.modesStore = makeAutoObservable(new ModesStore());
     this.isolinesStore = makeAutoObservable(
       new IsolinesStore(this.modesStore, this.measurementsStore)
