@@ -8,7 +8,7 @@ import { ModesControl } from 'src/components/modes/ModesControl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
 import { useDebouncedCallback } from 'use-debounce/lib';
-import { RangesControl } from './range/RangesControl';
+import { ModeBlockRange } from './range/ModeBlockRange';
 import { useCameraRotation } from './transitions/useCameraRotation';
 
 // Set your mapbox access token here
@@ -115,7 +115,7 @@ export const PolutionMap = observer(() => {
       <button type="button" onClick={() => mapStore.toggleIs3D()}>
         3D
       </button>
-      <RangesControl />
+      <ModeBlockRange />
       <ModesControl />
     </DeckGL>
   );
