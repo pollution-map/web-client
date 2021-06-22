@@ -1,6 +1,5 @@
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
 import styled from 'styled-components';
 
 const StyledRangesControl = styled.div`

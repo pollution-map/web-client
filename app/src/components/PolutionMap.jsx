@@ -4,10 +4,10 @@ import DeckGL, { MapView } from 'deck.gl';
 import { observer } from 'mobx-react-lite';
 import { useCallback, useRef, useState } from 'react';
 import { StaticMap } from 'react-map-gl';
-import { ModesControl } from 'src/components/modes/ModesControl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
 import { useDebouncedCallback } from 'use-debounce/lib';
+import { ButtonGroup } from 'src/components/ButtonGroup';
 import { ModeBlockRange } from './range/ModeBlockRange';
 import { useCameraRotation } from './transitions/useCameraRotation';
 
@@ -58,7 +58,7 @@ export const PolutionMap = observer(() => {
   }, 100);
 
   useCameraRotation(9000);
-  
+
   return (
     <DeckGL
       onViewStateChange={onViewStateChange}
@@ -115,8 +115,8 @@ export const PolutionMap = observer(() => {
       <button type="button" onClick={() => mapStore.toggleIs3D()}>
         3D
       </button>
+      <ButtonGroup />
       <ModeBlockRange />
-      <ModesControl />
     </DeckGL>
   );
 });
