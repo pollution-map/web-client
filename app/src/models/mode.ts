@@ -2,6 +2,7 @@ import { IActiveParams } from "src/utils/isolines";
 
 export interface IMode {
   name: string;
+  displayName: string;
   isActive: boolean;
 }
 

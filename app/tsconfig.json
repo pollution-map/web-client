@@ -21,7 +21,8 @@
     "jsx": "react-jsx",
     "checkJs": false,
     "typeRoots": [
-      "@types/*"
+      "@types/*",
+      "@danmarshall/deckgl-typings"
     ],
     "baseUrl": "."
   },

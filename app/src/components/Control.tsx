@@ -1,42 +1,62 @@
-// LeafletMap <-> React Components adapter
-// alows to place React Components onto a leaflet map as Controls
-// implemented by https://github.com/LiveBy/react-leaflet-control/issues/44#issuecomment-723469330
-import type { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
+// Basic class for placing controls on a map
+import type { ReactNode } from 'react';
+import styled from 'styled-components';
 
-/**
- * @see https://react-leaflet.js.org/docs/example-react-control
- */
+type Position = 'bottomleft' | 'bottomright' | 'topleft' | 'topright';
 
-// Classes used by Leaflet to position controls.
-const POSITION_CLASSES = {
-    bottomleft: 'leaflet-bottom leaflet-left',
-    bottomright: 'leaflet-bottom leaflet-right',
-    topleft: 'leaflet-top leaflet-left',
-    topright: 'leaflet-top leaflet-right',
-} as const;
+const SControl = styled.div<{ position: Position }>`
+  position: absolute;
+  ${({ position }) =>
+    position === 'topright' &&
+    `
+      margin-top: 10px;
+      margin-right: 10px;
+      top: 0;
+      right: 0;
+    `};
+    ${({ position }) =>
+    position === 'topleft' &&
+    `
+      margin-left: 10px;
+      margin-right: 10px;
+      top: 0;
+      left: 0;
+    `};
+    ${({ position }) =>
+    position === 'bottomright' &&
+    `
+      margin-bottom: 10px;
+      margin-right: 10px;
+      bottom: 0;
+      right: 0;
+    `};
+    ${({ position }) =>
+    position === 'bottomleft' &&
+    `
+      margin-bottom: 10px;
+      margin-left: 10px;
+      bottom: 0;
+      left: 0;
+    `};
+`;
 
-// Wrapper around {children} to place them onto a leaflet map
 const Control = (props: ControlProps): JSX.Element => {
-    const { position, containerProps, children } = props;
-    return (
-        <div className={POSITION_CLASSES[position]}>
-            <div className='leaflet-control leaflet-bar' {...containerProps}>
-                {children}
-            </div>
-        </div>
-    );
+  const { position, children } = props;
+  return (
+    <SControl position={position}>
+      {children}
+    </SControl>
+  );
 };
 
 export type ControlProps = {
-    position: keyof typeof POSITION_CLASSES;
-    containerProps?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-    children: ReactNode;
+  position: Position;
+  children: ReactNode;
 };
 
 Control.defaultProps = {
-    position: 'topleft' as ControlProps['position'],
-    containerProps: {},
-    children: null,
+  position: 'topleft' as Position,
+  children: null,
 };
 
 export default Control;

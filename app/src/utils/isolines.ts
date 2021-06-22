@@ -3,7 +3,7 @@ import { extent, scaleLinear } from 'd3';
 import { ContourFN, geoContour } from 'd3-geo-voronoi';
 import { FeatureCollection, MultiPolygon, Position } from 'geojson';
 import { GeoPoint, GeoPointO, GeoPointW, PointWeight, WeightObject } from 'src/models/geo-point';
-import { Isolines } from 'src/models/isoline';
+import { Isolines, NoIsolines } from 'src/models/isoline';
 
 export const isolines = (
   borders: Array<GeoPoint>,
@@ -44,22 +44,18 @@ export interface IActiveParams {
   [name: string]: boolean
 }
 
-// BUG: значения value некорректно соотносятся с предметной областью
-//      например, если значения предметной области превышают 100, то value достигает 100
-//      если же значения предметной области, не достигают 100, то и value не достигает 100
-//      ожидаемое поведение: value для любой предметной области должен быть в диапазоне от 0 до 100
-
 export const comboisolines = (
   borders: Array<GeoPoint>,
   data: Array<GeoPointO<WeightObject>>,
   modes: IActiveParams,
   smooth: number = 4,
-  configure: (contour: ContourFN) => ContourFN = (c) => c.thresholds(20)
+  configure: (contour: ContourFN) => ContourFN = (c) => c.thresholds(30)
 ): Isolines => {
   const acitveModes = Object.fromEntries(
     Object.entries(modes).filter(([modeName, isActive]) => isActive)
   );
   const activeModesCount = Object.keys(acitveModes).length;
+  if (!activeModesCount) return NoIsolines;
 
   const scales = Object.fromEntries(
     Object.entries(modes).map(([paramName, isActive]) => [
@@ -122,7 +118,7 @@ export const comboisolines = (
               .filter(([paramName]) => paramName in acitveModes) 
               .map(([param, paramScale]) => [
                 param,
-                paramScale.invert(contours[i].value),
+                paramScale.invert(contours[i].value).toFixed(1),
               ])
           ),
           // ... and value
@@ -131,5 +127,50 @@ export const comboisolines = (
       })),
   };
 
-  return result;
+  return splitOutIsolines(scaleValueToRange(result, [0, 100]));
 };
+
+const splitOutIsolines = (isolines: Isolines): Isolines => {
+  const result = {
+    type: "FeatureCollection" as const,
+    features: isolines.features.map(feature => {
+      return feature.geometry.coordinates.map(coords => {
+        return coords.map(c => {
+          const res = ({
+            ...feature,
+            geometry: {
+              type: "MultiPolygon" as const,
+              coordinates: [[c]],
+            }
+          });
+          return res;
+        });
+      })
+    }).flat(2)
+  };
+  return result;
+}
+
+const scaleValueToRange = (isoliens: Isolines, range: Array<number>): Isolines => {
+  const valueToRangeScale = scaleLinear()
+    .domain(
+      extent(isoliens.features.map((f) => f.properties.value)) as [
+        minValue: number,
+        maxValue: number
+      ]
+    )
+    .range(range);
+  
+  const result = {
+    type: 'FeatureCollection' as const,
+    features: isoliens.features.map(feature => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        value: valueToRangeScale(feature.properties.value)
+      }
+    }))
+  }
+
+  return result;
+}

@@ -1,13 +1,15 @@
-import { IMode } from "src/models/mode";
+import { IMode } from 'src/models/mode';
 
 export class ModesStore {
   modes: Array<IMode> = [
     {
       name: 'polution',
+      displayName: 'Загрязнение воздуха',
       isActive: false,
     },
     {
       name: 'noise',
+      displayName: 'Шум',
       isActive: true,
     },
   ];
@@ -16,7 +18,6 @@ export class ModesStore {
     const modeIndex = this.modes.findIndex((m) => m.name == mode.name);
     if (modeIndex == -1) return;
     this.modes[modeIndex].isActive = !this.modes[modeIndex].isActive;
-    console.log(mode.name, mode.isActive)
   }
 
   get ActiveModes(): Array<IMode> {

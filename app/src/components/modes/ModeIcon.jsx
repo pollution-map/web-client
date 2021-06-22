@@ -1,15 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import PropTypes from 'prop-types';
 import { Fragment } from 'react';
 import { Noise } from 'src/icons/Noise';
 import { Polution } from 'src/icons/Polution';
 import styled from 'styled-components';
 
 // icon chosen by name
-const ChosenModeIcon = ({ name, className, isActive }) => {
+const ChosenModeIcon = ({ name, className, color, opacity }) => {
   const iconStyle = {
     className,
-    color: isActive ? 'black' : 'lightgray',
-    opacity: isActive ? 1 : 0.5,
+    color,
+    opacity,
   };
 
   switch (name) {
@@ -23,18 +24,23 @@ const ChosenModeIcon = ({ name, className, isActive }) => {
   }
 };
 
+ChosenModeIcon.propTypes = {
+  name: PropTypes.string.isRequired,
+  color: PropTypes.string,
+  opacity: PropTypes.number,
+  className: PropTypes.string,
+};
+
+ChosenModeIcon.defaultProps = {
+  className: 'unexpected class name value',
+  color: 'black',
+  opacity: 1,
+};
+
 // decorates chosen icon with styles
-export const ModeIcon = styled(ChosenModeIcon)`
+export const ModeIcon = styled(ChosenModeIcon).attrs(({ color }) => ({
+  color: color || 'black',
+}))`
   width: 30px;
   height: 30px;
-  color: lightgray;
-
-  /*
-   * doesn't work
-   * so we apply style in jsx
-   ${({ isActive }) =>
-    isActive &&
-    `
-    color: white
-  `}; */
 `;

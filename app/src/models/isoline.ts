@@ -1,10 +1,10 @@
-import { WeightObject } from 'src/models/geo-point';
 import { Feature, FeatureCollection, MultiPolygon } from 'geojson';
+import { WeightObjectV } from './geo-point';
 
-export type Isolines = FeatureCollection<MultiPolygon, WeightObject>;
-export type Isoline = Feature<MultiPolygon, WeightObject>;
+export type Isolines = FeatureCollection<MultiPolygon, WeightObjectV>;
+export type Isoline = Feature<MultiPolygon, WeightObjectV>;
 
-export const EmptyIsolines: Isolines = {
+export const NoIsolines: Isolines = {
     type: "FeatureCollection" as const,
     features: []
 }

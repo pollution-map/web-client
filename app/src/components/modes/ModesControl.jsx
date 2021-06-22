@@ -9,7 +9,7 @@ const StyledModesControl = styled.div`
   flex-direction: column;
 `;
 
-export const ModesControl = observer(() => {
+export const ModesControl = observer(({ position }) => {
   const { modesStore } = useStore();
 
   const onModeToggle = (mode) => {
@@ -17,7 +17,7 @@ export const ModesControl = observer(() => {
   };
 
   return (
-    <LeafletControlWrapper position="bottomleft">
+    <LeafletControlWrapper position={position}>
       <StyledModesControl>
         {modesStore.modes.map((m) => (
           <ModeButton key={m.name} mode={m} onToggle={onModeToggle} />
@@ -26,3 +26,7 @@ export const ModesControl = observer(() => {
     </LeafletControlWrapper>
   );
 });
+
+ModesControl.defaultProps = {
+  position: 'topright',
+};

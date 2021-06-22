@@ -18,7 +18,9 @@ export class IsolinesStore {
     const result = comboisolines(
       izhevskBorders,
       measurements.map((m) => asGeoPoint(m)),
-      asActiveParams(modes)
+      asActiveParams(modes),
+      4,
+      isolines => isolines.thresholds(40) 
     );
 
     return result;

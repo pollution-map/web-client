@@ -3,6 +3,7 @@ import {
   interpolateCool,
   interpolateDiscrete,
   interpolateMagma,
+  interpolateRgb,
   scaleSequential,
 } from 'd3';
 
@@ -30,5 +31,22 @@ const german = (domain) =>
 const cool = (domain) => scaleWithDomain(interpolateCool, domain);
 const magama = (domain) => scaleWithDomain(interpolateMagma, domain);
 const blue = (domain) => scaleWithDomain(interpolateBlues, domain);
+const green = (domain) =>
+  scaleWithDomain(
+    interpolateDiscrete([
+      '#143e04',
+      '#99aa55',
+      '#e6b333',
+      '#e6b333',
+      '#5e0808',
+      '#db0b00',
+    ]),
+    domain
+  );
+const logo = (domain) =>
+  scaleWithDomain(
+    interpolateRgb('rgba(147, 41, 149, 0.72)', 'rgba(0, 255, 133, 0.72)'),
+    domain
+  );
 
-export { german, cool, magama, blue };
+export { german, cool, magama, blue, green, logo };

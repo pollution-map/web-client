@@ -1,7 +1,7 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+# For map to display must create .env file with your mapbox [acces token](https://docs.mapbox.com/help/getting-started/access-tokens/) variable: REACT_APP_MAPBOX_ACCES_TOKEN='Your mapbox acces token'
 ## Available Scripts
 
 In the project directory, you can run:
