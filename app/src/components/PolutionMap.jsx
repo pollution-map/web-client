@@ -10,6 +10,7 @@ import { useDebouncedCallback } from 'use-debounce/lib';
 import { ButtonGroup } from 'src/components/ButtonGroup';
 import { ModeBlockRange } from './range/ModeBlockRange';
 import { useCameraRotation } from './transitions/useCameraRotation';
+import { Logo } from './Logo';
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCES_TOKEN;
@@ -115,6 +116,7 @@ export const PolutionMap = observer(() => {
       <button type="button" onClick={() => mapStore.toggleIs3D()}>
         3D
       </button>
+      <Logo />
       <ButtonGroup />
       <ModeBlockRange />
     </DeckGL>
