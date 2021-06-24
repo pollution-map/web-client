@@ -9,6 +9,7 @@ export class IsolinePickInfoStore {
   get PickInfo(): IsolinePickInfo {
     return this._pickInfo;
   }
+
   set PickInfo(info: IsolinePickInfo) {
     this._pickInfo = info;
   }

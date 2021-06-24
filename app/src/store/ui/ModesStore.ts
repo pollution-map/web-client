@@ -15,8 +15,8 @@ export class ModesStore {
   ];
 
   toggleMode(mode: IMode) {
-    const modeIndex = this.modes.findIndex((m) => m.name == mode.name);
-    if (modeIndex == -1) return;
+    const modeIndex = this.modes.findIndex((m) => m.name === mode.name);
+    if (modeIndex === -1) return;
     this.modes[modeIndex].isActive = !this.modes[modeIndex].isActive;
   }
 

@@ -1,4 +1,4 @@
-import { IActiveParams } from "src/utils/isolines";
+import { IActiveParams } from 'src/utils/isolines';
 
 export interface IMode {
   name: string;
@@ -7,10 +7,10 @@ export interface IMode {
 }
 
 export const asActiveParams = (modes: Array<IMode>): IActiveParams => {
-    const result = {};
-    for (let i = 0; i < modes.length; i++) {
-        const mode = modes[i];
-        Object.assign(result, Object.fromEntries([[mode.name, mode.isActive]]));
-    }
-    return result;
-}
+  const result = {};
+  for (let i = 0; i < modes.length; i++) {
+    const mode = modes[i];
+    Object.assign(result, Object.fromEntries([[mode.name, mode.isActive]]));
+  }
+  return result;
+};

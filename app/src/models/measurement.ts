@@ -1,4 +1,9 @@
-import { GeoPointO, Latitude, Longitude, WeightObject } from 'src/models/geo-point';
+import {
+  GeoPointO,
+  Latitude,
+  Longitude,
+  WeightObject,
+} from 'src/models/geo-point';
 
 export interface IMeasurement {
   latitude: Latitude;
