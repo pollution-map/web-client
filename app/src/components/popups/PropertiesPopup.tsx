@@ -3,18 +3,18 @@ import { WeightObjectV } from 'src/models/geo-point';
 import { useStore } from 'src/store/RootStoreContext';
 import { magama } from 'src/utils/colorScheme';
 import styled from 'styled-components';
-import { ColorIndicator } from './ColorIndicator';
-import { TextIndicator } from './TextIndicator';
 
-const StyledPopupContent = styled.div<{ left: number; top: number }>`
+const StyledPopupContent = styled.div<{
+  left: number;
+  top: number;
+  color: string;
+}>`
   position: absolute;
   z-index: 0;
   pointer-events: none;
   left: ${(props) => props.left}px;
   top: ${(props) => props.top}px;
-  /* box-shadow: 0 0 10px black; */
   flex-wrap: wrap;
-  /* background-color: rgba(107, 105, 105, 0.6); */
   padding: 10px;
   text-shadow: 1px 0 1px #181818, 0 1px 1px #181818, -1px 0 1px #181818,
     0 -1px 1px #181818;
@@ -41,7 +41,6 @@ const PropItem = styled.div`
   padding: 0 5px 0 0;
   color: #ffffff;
   flex-wrap: wrap;
-  /* min-width: 100px; */
 `;
 
 const StyledPropName = styled.span`
@@ -65,7 +64,6 @@ const StyledPropRow = styled.div`
 
 const Property: React.FC<PropertyProps> = ({ text, value, modeName }) => {
   const c = color(value).toString();
-  debugger;
   return (
     <PropItem>
       <StyledPropName>{text}</StyledPropName>
@@ -91,10 +89,6 @@ const StyledPropsContainer = styled.div`
   padding: 0 8px;
 `;
 
-const StyledTextIndicator = styled(TextIndicator)`
-  margin-top: 8px;
-`;
-
 export const PropertiesPopup: React.FC<PopupProps> = ({ x, y, properties }) => {
   const { modesStore } = useStore();
   const c = color(properties.value).toString();
@@ -111,8 +105,6 @@ export const PropertiesPopup: React.FC<PopupProps> = ({ x, y, properties }) => {
           />
         ))}
       </StyledPropsContainer>
-      <ColorIndicator color={c} />
-      {/* <StyledTextIndicator value={properties.value} color={c} borderColor={bc} /> */}
     </StyledPopupContent>
   );
 };

@@ -1,4 +1,4 @@
-type RGBAArray = [R: number, G: number, B: number, A: number];
+type RGBAArray = [R: number, G: number, B: number, A?: number];
 const Transparent = [0, 0, 0, 0] as RGBAArray;
 
 // convert #RGB and #RGBA to #RRGGBB and #RRGGBBAA

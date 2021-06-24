@@ -1,7 +1,7 @@
 import { scaleQuantize } from 'd3';
 import styled from 'styled-components';
 
-const StyledDiv = styled.div<{ color: string; borderColor: string }>`
+const StyledDiv = styled.div`
   width: 100%;
   color: white;
   flex-basis: 100%;
@@ -10,21 +10,9 @@ const StyledDiv = styled.div<{ color: string; borderColor: string }>`
   font-size: 150%;
   padding-right: 30px;
   display: inlint-block;
-  ${({ color }) =>
-    color &&
-    `
-      color: ${color}
-    `};
-  ${({ borderColor }) =>
-    borderColor &&
-    `
-      text-shadow:
-        1px   0    1px ${borderColor},
-        0     1px  1px ${borderColor},
-        -1px  0    1px ${borderColor},
-        0    -1px  1px ${borderColor};
-    `};
+
 `;
+
 
 const textScale = scaleQuantize(
   [0, 70, 80],
@@ -33,17 +21,13 @@ const textScale = scaleQuantize(
 
 interface PropTypes {
   value: number;
-  color: string;
-  borderColor: string;
 }
 
 export const TextIndicator: React.FC<PropTypes> = ({
   value,
-  color,
-  borderColor,
 }) => {
   return (
-    <StyledDiv color={color} borderColor={borderColor}>
+    <StyledDiv>
       {textScale(value)}
     </StyledDiv>
   );

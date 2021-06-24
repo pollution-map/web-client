@@ -1,17 +1,13 @@
 import { MapboxLayer } from '@deck.gl/mapbox';
 import GL from '@luma.gl/constants';
-import { easeQuadInOut, easeSinOut } from 'd3';
-import DeckGL, { GeoJsonLayer } from 'deck.gl';
-import 'leaflet/dist/leaflet.css';
+import DeckGL from 'deck.gl';
 import { observer } from 'mobx-react-lite';
 import { useCallback, useRef, useState } from 'react';
 import { StaticMap } from 'react-map-gl';
+import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import center from 'src/data/izhevskCenter.json';
 import { useStore } from 'src/store/RootStoreContext';
-import { magama } from 'src/utils/colorScheme';
-import { colorToArray } from 'src/utils/colorToArray';
-import { ModesControl } from './modes/ModesControl';
-import { PropertiesPopup } from './popups/PropertiesPopup.tsx';
+import { ModesControl } from 'src/components/modes/ModesControl';
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCES_TOKEN;
@@ -30,9 +26,13 @@ const INITIAL_VIEW_STATE = {
 export const PolutionMap = observer(() => {
   // DeckGL and mapbox will both draw into this WebGL context
   // layering stuff
-  const [glContext, setGLContext] = useState();
+
+  const [glContext, setGLContext] = useState(null);
   const deckRef = useRef(null);
   const mapRef = useRef(null);
+
+  const { deckLayersStore } = useStore();
+  const { isolinePickInfoStore } = useStore();
   const onMapLoad = useCallback(() => {
     const map = mapRef.current.getMap();
     const { deck } = deckRef.current;
@@ -45,63 +45,9 @@ export const PolutionMap = observer(() => {
       'land-structure-polygon'
     );
     map.touchZoomRotate.disableRotation();
+
+    deckLayersStore.setBaseMapInitialized();
   }, []);
-
-  // actual logic
-  const { isolinesStore } = useStore();
-  const [elevated, setElevated] = useState(true);
-  const [hoverInfo, setHoverInfo] = useState({});
-  const color = magama([-20, 95]);
-  const [isDraggingNow, setIsDraggingNow] = useState(false);
-
-  const layers = [
-    new GeoJsonLayer({
-      id: 'isolines',
-      data: isolinesStore.isolines,
-      // opacity: 0.02,
-      pickable: true,
-      filled: true,
-      extruded: true,
-      stroked: true,
-      onHover: (info) => setHoverInfo(info),
-      getFillColor: (f) => {
-        const value = color(f.properties.value);
-        return colorToArray(value);
-      },
-      getElevation: (f) => {
-        const { value } = f.properties;
-        if (!elevated) return value * 0.01;
-        // return (value ** 1.3) ** 1.35 - 1;
-        return ((value ** 1.1) ** 1.2) ** 1.3 - 1;
-      },
-      updateTriggers: {
-        getElevation: [elevated],
-      },
-      transitions: {
-        geometry: {
-          duration: 700,
-          easing: easeQuadInOut,
-        },
-        getElevation: {
-          duration: 800,
-          easing: easeSinOut,
-        },
-      },
-      material: {
-        ambient: 1,
-        diffuse: 0.001,
-        // diffuse: 2,
-        shininess: 100,
-      },
-    }),
-
-    // material={{
-    //   ambient: 0.5,
-    //   diffuse: 0.5,
-    //   // diffuse: 2,
-    //   shininess: 0,
-    // }}
-  ];
 
   return (
     <DeckGL
@@ -110,19 +56,13 @@ export const PolutionMap = observer(() => {
       initialViewState={INITIAL_VIEW_STATE}
       width="100vw"
       height="100vh"
-      layers={layers}
-      // useDevicePixels={false}
-      glOptions={
-        {
-          // stencil: true,
-          // depth: false,
-        }
-      }
+      gl={glContext}
+      layers={deckLayersStore.layers}
+      glOptions={{
+        /* To render vector tile polygons correctly */
+        stencil: true,
+      }}
       parameters={{
-        // depthMask: false,
-        // depthTest: true,
-        depthMask: false,
-        depthTest: true,
         blendFunc: [
           GL.SRC_ALPHA,
           GL.ONE_MINUS_SRC_ALPHA,
@@ -133,31 +73,34 @@ export const PolutionMap = observer(() => {
       }}
       controller={{
         scrollZoom: {
-          speed: 0.01,
+          speed: 0.001,
           smooth: true,
         },
       }}
       getCursor={({ isDragging }) => {
-        setIsDraggingNow(isDragging);
+        if (isDragging) isolinePickInfoStore.PickInfo = null;
       }}
     >
       {glContext && (
         <StaticMap
+          reuseMaps
+          asyncRender
           ref={mapRef}
           gl={glContext}
-          mapStyle="mapbox://styles/vfqww/ckq55qrrp0eom17n2qkmkcjd2"
-          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
           onLoad={onMapLoad}
+          // mapStyle="mapbox://styles/vfqww/ckq55qrrp0eom17n2qkmkcjd2"
+          mapStyle="mapbox://styles/vfqww/ckq8cu7ea0nz417pehvywpm7t"
+          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
         />
       )}
-      {!isDraggingNow && hoverInfo?.object?.properties?.value > 0 && (
+      {isolinePickInfoStore.PickInfo?.object && (
         <PropertiesPopup
-          x={hoverInfo.x}
-          y={hoverInfo.y}
-          properties={hoverInfo.object.properties}
+          x={isolinePickInfoStore.PickInfo.x}
+          y={isolinePickInfoStore.PickInfo.y}
+          properties={isolinePickInfoStore.PickInfo.object.properties}
         />
       )}
-      <button type="button" onClick={() => setElevated(!elevated)}>
+      <button type="button" onClick={() => deckLayersStore.toggleIs3D()}>
         3D
       </button>
       <ModesControl />

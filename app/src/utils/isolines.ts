@@ -1,8 +1,15 @@
+import { hashCode } from './hashCode';
 import polygonSmooth from '@turf/polygon-smooth';
 import { extent, scaleLinear } from 'd3';
 import { ContourFN, geoContour } from 'd3-geo-voronoi';
 import { FeatureCollection, MultiPolygon, Position } from 'geojson';
-import { GeoPoint, GeoPointO, GeoPointW, PointWeight, WeightObject } from 'src/models/geo-point';
+import {
+  GeoPoint,
+  GeoPointO,
+  GeoPointW,
+  PointWeight,
+  WeightObject,
+} from 'src/models/geo-point';
 import { Isolines, NoIsolines } from 'src/models/isoline';
 
 export const isolines = (
@@ -33,15 +40,14 @@ export const isolines = (
           // save value data when smoothing
           value: contours[i].value,
         },
-      }))
-      
+      })),
   };
 
   return result;
 };
 
 export interface IActiveParams {
-  [name: string]: boolean
+  [name: string]: boolean;
 }
 
 export const comboisolines = (
@@ -69,7 +75,9 @@ export const comboisolines = (
                 data.map(([lat, lon, valueObj]) => valueObj[paramName])
               ) as [minValOfParam: number, maxValOfParam: number]
             )
-            .range([0, 100]).nice().clamp(true)
+            .range([0, 100])
+            .nice()
+            .clamp(true)
         : scaleLinear().range([0, 0]).clamp(true).unknown(0),
     ])
   );
@@ -80,13 +88,16 @@ export const comboisolines = (
     lon,
     // value = sum all values of params and divide by count of params
     // (it merges correctly because all params have been translated to [0, 100] domain)
-    Object.entries(valueObj).filter(([paramName]) => {
-      return paramName in acitveModes;
-    }).reduce(
-      ([accumName, accumParamValue], [paramName, paramValue]) => {
-        return ['', accumParamValue +  scales[paramName](paramValue)];
-      }
-    , ['', 0])[1] / activeModesCount,
+    Object.entries(valueObj)
+      .filter(([paramName]) => {
+        return paramName in acitveModes;
+      })
+      .reduce(
+        ([accumName, accumParamValue], [paramName, paramValue]) => {
+          return ['', accumParamValue + scales[paramName](paramValue)];
+        },
+        ['', 0]
+      )[1] / activeModesCount,
   ]) as Array<GeoPointW>;
 
   const input = [...borders, ...mergedData];
@@ -98,33 +109,36 @@ export const comboisolines = (
     polygonSmooth(crv, { iterations: smooth })
   );
 
+  const features = smoothedContours
+    // filter out corrupted polygons after smoothing
+    .filter((f) =>
+      f.features[0].geometry.coordinates
+        .flat(2)
+        .every((crv: Position) => typeof crv !== 'undefined')
+    )
+    .map((f, i) => ({
+      ...f.features[0],
+      properties: {
+        ...Object.fromEntries(
+          // save value data when smoothing
+          // & add data for all active params
+          Object.entries(scales)
+            // result geoJson contains active modes ...
+            .filter(([paramName]) => paramName in acitveModes)
+            .map(([param, paramScale]) => [
+              param,
+              paramScale.invert(contours[i].value).toFixed(1),
+            ])
+        ),
+        // ... and value
+        value: contours[i].value,
+      },
+      hashCode: hashCode(f.toString()),
+    }));
+
   const result = {
     type: 'FeatureCollection' as const,
-    features: smoothedContours
-      // filter out corrupted polygons after smoothing
-      .filter((f) =>
-        f.features[0].geometry.coordinates
-          .flat(2)
-          .every((crv: Position) => typeof crv !== 'undefined')
-      )
-      .map((f, i) => ({
-        ...f.features[0],
-        properties: {
-          ...Object.fromEntries(
-            // save value data when smoothing
-            // & add data for all active params
-            Object.entries(scales)
-              // result geoJson contains active modes ...
-              .filter(([paramName]) => paramName in acitveModes) 
-              .map(([param, paramScale]) => [
-                param,
-                paramScale.invert(contours[i].value).toFixed(1),
-              ])
-          ),
-          // ... and value
-          value: contours[i].value,
-        }
-      })),
+    features,
   };
 
   return splitOutIsolines(scaleValueToRange(result, [0, 100]));
@@ -132,45 +146,47 @@ export const comboisolines = (
 
 const splitOutIsolines = (isolines: Isolines): Isolines => {
   const result = {
-    type: "FeatureCollection" as const,
-    features: isolines.features.map(feature => {
-      return feature.geometry.coordinates.map(coords => {
-        return coords.map(c => {
-          const res = ({
-            ...feature,
-            geometry: {
-              type: "MultiPolygon" as const,
-              coordinates: [[c]],
-            }
+    ...isolines,
+    features: isolines.features
+      .map((feature) => {
+        return feature.geometry.coordinates.map((coords) => {
+          return coords.map((c) => {
+            const res = {
+              ...feature,
+              geometry: {
+                type: 'MultiPolygon' as const,
+                coordinates: [[c]],
+              },
+            };
+            return res;
           });
-          return res;
         });
       })
-    }).flat(2)
+      .flat(2),
   };
   return result;
-}
+};
 
-const scaleValueToRange = (isoliens: Isolines, range: Array<number>): Isolines => {
+const scaleValueToRange = (lines: Isolines, range: Array<number>): Isolines => {
   const valueToRangeScale = scaleLinear()
     .domain(
-      extent(isoliens.features.map((f) => f.properties.value)) as [
+      extent(lines.features.map((f) => f.properties.value)) as [
         minValue: number,
         maxValue: number
       ]
     )
     .range(range);
-  
+
   const result = {
-    type: 'FeatureCollection' as const,
-    features: isoliens.features.map(feature => ({
+    ...lines,
+    features: lines.features.map((feature) => ({
       ...feature,
       properties: {
         ...feature.properties,
-        value: valueToRangeScale(feature.properties.value)
-      }
-    }))
-  }
+        value: valueToRangeScale(feature.properties.value),
+      },
+    })),
+  };
 
   return result;
-}
+};

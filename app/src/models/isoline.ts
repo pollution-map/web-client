@@ -1,8 +1,13 @@
+import { HashCode, hashCode } from 'src/utils/hashCode';
 import { Feature, FeatureCollection, MultiPolygon } from 'geojson';
 import { WeightObjectV } from './geo-point';
 
-export type Isolines = FeatureCollection<MultiPolygon, WeightObjectV>;
-export type Isoline = Feature<MultiPolygon, WeightObjectV>;
+export interface Isoline extends Feature<MultiPolygon, WeightObjectV> {
+    hashCode: HashCode;
+}
+export interface Isolines extends FeatureCollection<MultiPolygon, WeightObjectV> {
+    features: Array<Isoline>;
+}
 
 export const NoIsolines: Isolines = {
     type: "FeatureCollection" as const,
