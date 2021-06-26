@@ -3,7 +3,7 @@ import { PickInfo } from 'deck.gl';
 
 type IsolinePickInfo = PickInfo<Isoline> | null;
 
-export class IsolinePickInfoStore {
+export class PickInfoStore {
   _pickInfo: IsolinePickInfo = null;
 
   get PickInfo(): IsolinePickInfo {

@@ -1,30 +1,26 @@
 import { RGBAColor } from '@deck.gl/core';
 import { easeSinOut } from 'd3';
 import { GeoJsonLayer } from 'deck.gl';
+import { IsolinesStore } from 'src/store/ui/IsolinesStore';
 import { magama } from 'src/utils/colorScheme';
 import { colorToArray } from 'src/utils/colorToArray';
-import { IsolinePickInfoStore } from './IsolinePickInfoStore';
-import { IsolinesStore } from './IsolinesStore';
+import { MapStore } from './MapStore';
+import { PickInfoStore } from './PickInfoStore';
 const color = magama([-20, 100]);
 
-export class DeckLayersStore {
+export class LayersStore {
   constructor(
     private isolinesStore: IsolinesStore,
-    private isolinePickInfoStore: IsolinePickInfoStore
+    private mapStore: MapStore,
+    private pickInfoStore: PickInfoStore
   ) {}
-
-  isBaseMapInitialized: boolean = false;
-  setBaseMapInitialized = () => (this.isBaseMapInitialized = true);
-
-  is3D: boolean = false;
-  toggleIs3D = () => (this.is3D = !this.is3D);
 
   get layers(): Array<any> {
     return [
       new GeoJsonLayer({
-        visible: this.isBaseMapInitialized,
+        visible: this.mapStore.isBaseMapInitialized,
         id: 'isolines',
-        data: this.is3D
+        data: this.mapStore.is3D
           ? this.isolinesStore.isolinesZ.features
           : this.isolinesStore.isolines.features,
         pickable: true,
@@ -35,7 +31,8 @@ export class DeckLayersStore {
           // @ts-ignore
           // fix for z-fighting
           // https://deck.gl/docs/developer-guide/tips-and-tricks#z-fighting-and-depth-testing
-          depthTest: this.is3D, // deep test false means no z-fighting but no filled polygons either
+          // deep test false means no z-fighting but no filled polygons either
+          depthTest: this.mapStore.is3D && this.mapStore.isZoomedFar,
           fp64: true,
         },
         fp64: true,
@@ -50,7 +47,7 @@ export class DeckLayersStore {
           return true;
         },
         onHover: (info: any) => {
-          this.isolinePickInfoStore.PickInfo = info;
+          this.pickInfoStore.PickInfo = info;
         },
         getFillColor: (f: any) => {
           const value = color(f.properties.value);
@@ -64,11 +61,11 @@ export class DeckLayersStore {
         getElevation: (f: any) => {
           const { value } = f.properties;
           // to prevent z-fighting when 3d transitions to 2d an so on
-          if (!this.is3D) return value * 0.1;
+          if (!this.mapStore.is3D) return value * 0.01;
           return ((value ** 1.1) ** 1.2) ** 1.3 - 1;
         },
         updateTriggers: {
-          getElevation: [this.is3D],
+          getElevation: [this.mapStore.is3D],
         },
         transitions: {
           getElevation: {

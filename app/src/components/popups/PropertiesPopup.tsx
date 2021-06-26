@@ -4,16 +4,25 @@ import { useStore } from 'src/store/RootStoreContext';
 import { magama } from 'src/utils/colorScheme';
 import styled from 'styled-components';
 
-const StyledPopupContent = styled.div<{
+interface PopupContentProps {
   left: number;
   top: number;
   color: string;
-}>`
+}
+
+const StyledPopupContent = styled.div.attrs<PopupContentProps>(
+  ({ left, top }) => {
+    return {
+      style: {
+        left: `${left}px`,
+        top: `${top}px`,
+      },
+    };
+  }
+)<PopupContentProps>`
   position: absolute;
   z-index: 0;
   pointer-events: none;
-  left: ${(props) => props.left}px;
-  top: ${(props) => props.top}px;
   flex-wrap: wrap;
   padding: 10px;
   text-shadow: 1px 0 1px #181818, 0 1px 1px #181818, -1px 0 1px #181818,

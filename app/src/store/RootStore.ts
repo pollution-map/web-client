@@ -1,10 +1,11 @@
+import { MapStore } from './ui/deck/MapStore';
 import { makeAutoObservable } from 'mobx';
 import {
   IMeasurementsStore,
   MockMeasurementsStore,
 } from './data/MeasurementsStore';
-import { DeckLayersStore } from './ui/DecklayersStore';
-import { IsolinePickInfoStore } from './ui/IsolinePickInfoStore';
+import { LayersStore } from './ui/deck/LayersStore';
+import { PickInfoStore } from './ui/deck/PickInfoStore';
 import { IsolinesStore } from './ui/IsolinesStore';
 import { ModesStore } from './ui/ModesStore';
 
@@ -17,8 +18,9 @@ export class RootStore {
   isolinesStore: IsolinesStore;
 
   // -- Deck Gl --
-  isolinePickInfoStore: IsolinePickInfoStore;
-  deckLayersStore: DeckLayersStore;
+  isolinePickInfoStore: PickInfoStore;
+  mapStore: MapStore;
+  layersStore: LayersStore;
 
   constructor() {
     // -- data --
@@ -31,9 +33,14 @@ export class RootStore {
     );
 
     // -- Deck Gl --
-    this.isolinePickInfoStore = makeAutoObservable(new IsolinePickInfoStore());
-    this.deckLayersStore = makeAutoObservable(
-      new DeckLayersStore(this.isolinesStore, this.isolinePickInfoStore)
+    this.isolinePickInfoStore = makeAutoObservable(new PickInfoStore());
+    this.mapStore = makeAutoObservable(new MapStore());
+    this.layersStore = makeAutoObservable(
+      new LayersStore(
+        this.isolinesStore,
+        this.mapStore,
+        this.isolinePickInfoStore
+      )
     );
   }
 }
