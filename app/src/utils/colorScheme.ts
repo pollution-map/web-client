@@ -4,13 +4,17 @@ import {
   interpolateDiscrete,
   interpolateMagma,
   interpolateRgb,
+  ScaleSequential,
   scaleSequential,
 } from 'd3';
 
-const scaleWithDomain = (interpolator, domain) =>
+type Interpolator = (t: number) => string;
+type Domain = Array<number>;
+
+const scaleWithDomain = (interpolator: Interpolator, domain: Domain) =>
   scaleSequential(interpolator).domain(domain);
 
-const german = (domain) =>
+const german = (domain: Domain): ScaleSequential<string, never> =>
   scaleWithDomain(
     interpolateDiscrete([
       '#82a6ad',
@@ -28,10 +32,10 @@ const german = (domain) =>
     domain
   );
 
-const cool = (domain) => scaleWithDomain(interpolateCool, domain);
-const magama = (domain) => scaleWithDomain(interpolateMagma, domain);
-const blue = (domain) => scaleWithDomain(interpolateBlues, domain);
-const green = (domain) =>
+const cool = (domain: Domain) => scaleWithDomain(interpolateCool, domain);
+const magama = (domain: Domain) => scaleWithDomain(interpolateMagma, domain);
+const blue = (domain: Domain) => scaleWithDomain(interpolateBlues, domain);
+const green = (domain: Domain) =>
   scaleWithDomain(
     interpolateDiscrete([
       '#143e04',
@@ -43,10 +47,12 @@ const green = (domain) =>
     ]),
     domain
   );
-const logo = (domain) =>
+const logo = (domain: Domain) =>
   scaleWithDomain(
     interpolateRgb('rgba(147, 41, 149, 0.72)', 'rgba(0, 255, 133, 0.72)'),
     domain
   );
+
+export type ColorFn = typeof cool;
 
 export { german, cool, magama, blue, green, logo };
