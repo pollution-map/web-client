@@ -32,7 +32,7 @@ export class LayersStore {
           // fix for z-fighting
           // https://deck.gl/docs/developer-guide/tips-and-tricks#z-fighting-and-depth-testing
           // deep test false means no z-fighting but no filled polygons either
-          depthTest: this.mapStore.is3D && this.mapStore.isZoomedFar,
+          depthTest: this.mapStore.is3D && this.mapStore.isZoomedNear,
           fp64: true,
         },
         fp64: true,
@@ -72,10 +72,6 @@ export class LayersStore {
             type: 'interpolation',
             duration: 800,
             easing: easeSinOut,
-            // @ts-ignore
-            enter: (v) => {
-              return [0];
-            },
           },
         },
         material: {

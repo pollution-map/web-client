@@ -6,8 +6,8 @@ import { useCallback, useRef, useState } from 'react';
 import { StaticMap } from 'react-map-gl';
 import { ModesControl } from 'src/components/modes/ModesControl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
-import center from 'src/data/izhevskCenter.json';
 import { useStore } from 'src/store/RootStoreContext';
+import { useCameraRotation } from './transitions/useCameraRotation';
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCES_TOKEN;
@@ -21,14 +21,6 @@ const view = new MapView({
   orthographic: false,
 });
 
-const INITIAL_VIEW_STATE = {
-  longitude: center[1],
-  latitude: center[0],
-  zoom: 12,
-  pitch: 35,
-  bearing: -2,
-};
-
 export const PolutionMap = observer(() => {
   // DeckGL and mapbox will both draw into this WebGL context
   // layering stuff
@@ -38,6 +30,7 @@ export const PolutionMap = observer(() => {
   const mapRef = useRef(null);
 
   const { layersStore, isolinePickInfoStore, mapStore } = useStore();
+
   const onMapLoad = useCallback(() => {
     const map = mapRef.current.getMap();
     const { deck } = deckRef.current;
@@ -54,15 +47,23 @@ export const PolutionMap = observer(() => {
     mapStore.setBaseMapInitialized();
   }, []);
 
+  const onViewStateChange = useCallback(({ viewState }) => {
+    mapStore.updateViewState(viewState);
+  }, []);
+
+  const onInteractionStateChange = useCallback((interactionState) => {
+    mapStore.updateInteractionState(interactionState);
+  }, []);
+
+  useCameraRotation(9000);
+
   return (
     <DeckGL
-      visiable={false}
-      onViewStateChange={(e) => {
-        mapStore.updateZoom(e.viewState.zoom);
-      }}
+      onViewStateChange={onViewStateChange}
+      onInteractionStateChange={onInteractionStateChange}
       ref={deckRef}
       view={view}
-      initialViewState={INITIAL_VIEW_STATE}
+      initialViewState={mapStore.viewState}
       onWebGLInitialized={setGLContext}
       width="100vw"
       height="100vh"
@@ -83,9 +84,10 @@ export const PolutionMap = observer(() => {
       }}
       controller={{
         scrollZoom: {
-          speed: 0.001,
+          speed: 0.01,
           smooth: true,
         },
+        inertia: true,
       }}
       getCursor={({ isDragging }) => {
         if (isDragging) isolinePickInfoStore.PickInfo = null;

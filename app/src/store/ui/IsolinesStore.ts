@@ -24,7 +24,6 @@ export class IsolinesStore {
       2,
       (isolines) => isolines.thresholds(40)
     );
-
     return result;
   }
 
