@@ -7,12 +7,12 @@ import { StaticMap } from 'react-map-gl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
 import { useDebouncedCallback } from 'use-debounce/lib';
-import { ButtonGroups } from 'src/components/ButtonGroups';
 import { useCameraRotation } from './transitions/useCameraRotation';
 import { Logo } from './Logo';
 import { RangesControl } from './ranges/RangesControl';
 import { ModesControl } from './modes/ModesControl';
 import { Button3D } from './map-modes/Button3D';
+import { ButtonGroups } from './ButtonGroups';
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCES_TOKEN;
