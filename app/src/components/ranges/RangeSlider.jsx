@@ -1,31 +1,38 @@
+/* eslint-disable no-nested-ternary */
 import Slider from '@material-ui/core/Slider';
-import Typography from '@material-ui/core/Typography';
-import styled from 'styled-components';
 import { createMuiTheme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { ThemeProvider } from '@material-ui/styles';
+import styled from 'styled-components';
 
-const StyledRangesControl = styled.div`
+const StyledRangesControl = styled.div.attrs(({ orientation, size }) => ({
+  orientation: orientation || 'horizontal',
+}))`
   display: flex;
   flex-direction: column;
-  width: 50px;
-  height: 60vh;
+  height: ${({ orientation, size }) =>
+    orientation === 'vertical'
+      ? size
+      : orientation === 'horizontal'
+      ? '100%'
+      : null};
+  width: ${({ orientation, size }) =>
+    orientation === 'vertical'
+      ? '100%'
+      : orientation === 'horizontal'
+      ? size
+      : null};
 `;
 
 const StyledTypography = styled(Typography)`
   color: #ffffff;
-  width: 20px;
+  width: 30px;
   height: 30px;
 `;
 
 const muiTheme = createMuiTheme({
   overrides: {
     MuiSlider: {
-      // thumb: {
-      //   color: '#ffffff',
-      // },
-      track: {
-        color: '#ffffff',
-      },
       rail: {
         color: '#d9d9d9',
       },
@@ -36,13 +43,13 @@ const muiTheme = createMuiTheme({
   },
 });
 
-export function RangeSlider({ range, onRangeChange }) {
+export function RangeSlider({ range, onRangeChange, orientation }) {
   return (
-    <StyledRangesControl>
+    <StyledRangesControl orientation={orientation} size="60vh">
       <ThemeProvider theme={muiTheme}>
         <StyledTypography>{range.name}</StyledTypography>
         <Slider
-          orientation="vertical"
+          orientation={orientation}
           defaultValue={range.values}
           valueLabelFormat={(v) => range.domainFn(v)}
           valueLabelDisplay="auto"

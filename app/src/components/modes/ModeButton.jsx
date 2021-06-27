@@ -7,7 +7,9 @@ export const ModeButton = observer(({ mode, onToggle }) => {
 
   return (
     <ToggleButton
-      style={{ border: 0 }}
+    style={{borderRadius  : 0}}
+      
+      variant="outlined"
       size="small"
       selected={isActive}
       onClick={() => {

@@ -7,10 +7,12 @@ import { StaticMap } from 'react-map-gl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
 import { useDebouncedCallback } from 'use-debounce/lib';
-import { ButtonGroup } from 'src/components/ButtonGroup';
-import { ModeBlockRange } from './range/ModeBlockRange';
+import { ButtonGroups } from 'src/components/ButtonGroups';
 import { useCameraRotation } from './transitions/useCameraRotation';
 import { Logo } from './Logo';
+import { RangesControl } from './ranges/RangesControl';
+import { ModesControl } from './modes/ModesControl';
+import { Button3D } from './map-modes/Button3D';
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCES_TOKEN;
@@ -113,12 +115,13 @@ export const PolutionMap = observer(() => {
           properties={isolinePickInfoStore.PickInfo.object.properties}
         />
       )}
-      <button type="button" onClick={() => mapStore.toggleIs3D()}>
-        3D
-      </button>
+
+      <ButtonGroups
+        modeSelection={<ModesControl />}
+        additionalModeSelection={<Button3D />}
+      />
+      <RangesControl orientation="horizontal" />
       <Logo />
-      <ButtonGroup />
-      <ModeBlockRange />
     </DeckGL>
   );
 });
