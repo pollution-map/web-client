@@ -7,6 +7,7 @@ import { StaticMap } from 'react-map-gl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
 import { useDebouncedCallback } from 'use-debounce/lib';
+import { CitySelection } from 'src/components/city-selection/CitySelection';
 import { useCameraRotation } from './transitions/useCameraRotation';
 import { Logo } from './Logo';
 import { RangesControl } from './ranges/RangesControl';
@@ -120,8 +121,9 @@ export const PolutionMap = observer(() => {
         modeSelection={<ModesControl />}
         additionalModeSelection={<Button3D />}
       />
-      <RangesControl orientation="horizontal" />
-      <Logo />
+      <CitySelection position="topleft" />
+      <RangesControl orientation="vertical" />
+      {/* <Logo /> */}
     </DeckGL>
   );
 });

@@ -18,7 +18,7 @@ const SControl = styled.div<{ position: Position }>`
     position === 'topleft' &&
     `
       margin-left: 10px;
-      margin-right: 10px;
+      margin-top: 10px;
       top: 0;
       left: 0;
     `};
