@@ -2,28 +2,29 @@ import { useCallback, useEffect } from 'react';
 import { LinearInterpolator } from 'react-map-gl';
 import { useStore } from 'src/store/RootStoreContext';
 
-const transitionInterpolator = new LinearInterpolator(['bearing']);
+const transitionInterpolator = new LinearInterpolator([
+  'bearing',
+  // added to stop the transition if one of this properties changes
+  'zoom',
+  'latitude',
+  'longitude',
+]);
 
 // auto rotate camera when in 3d after timeout
-// stop when user is interacting
 export const useCameraRotation = (afterTimeout) => {
   const { mapStore } = useStore();
 
   // rotation will continue while in 3d and user is not interacting
   const rotateCamera = useCallback(() => {
-    if (mapStore.is3D && !mapStore.isUserInteracting)
+    if (mapStore.is3D)
       mapStore.changeViewState((prevViewState) => ({
         ...prevViewState,
-        bearing: prevViewState.bearing + 1.5,
-        transitionDuration: 150,
+        bearing: prevViewState.bearing + 15,
+        transitionDuration: 1500,
         transitionInterpolator,
-        onTransitionEnd:
-          mapStore.is3D && !mapStore.isUserInteracting
-            ? rotateCamera
-            : () => {},
-        transitionInterruption: 1,
+        onTransitionEnd: () => (mapStore.is3D ? rotateCamera() : () => {}),
       }));
-  }, [mapStore.isUserInteracting, mapStore.is3D]);
+  }, [mapStore.is3D]);
 
   // after timeout start rotation
   useEffect(() => {

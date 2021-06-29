@@ -37,25 +37,6 @@ export class MapStore {
     this.updateViewState(reducer(this.viewState));
   };
 
-  // one way binded? just a copy of view state, i.e. changing this won't affect view
-  interactionState: InteractionState = {};
-  updateInteractionState = (interactionState: InteractionState) => {
-    this.interactionState = {
-      ...this.interactionState,
-      ...interactionState,
-    };
-  };
-
-  get isUserInteracting(): boolean {
-    return (
-      this.interactionState.isDragging ||
-      this.interactionState.isPanning ||
-      this.interactionState.isRotating ||
-      this.interactionState.isZooming ||
-      false
-    );
-  }
-
   get isZoomedNear(): boolean {
     const { zoom } = this.viewState;
     return zoom !== undefined && zoom > 12;

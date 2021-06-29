@@ -70,8 +70,12 @@ export class LayersStore {
         transitions: {
           getElevation: {
             type: 'interpolation',
-            duration: 800,
+            duration: 700,
             easing: easeSinOut,
+            //@ts-ignore
+            enter: (v) => {
+              return this.mapStore.is3D ? [0] : v;
+            },
           },
         },
         material: {

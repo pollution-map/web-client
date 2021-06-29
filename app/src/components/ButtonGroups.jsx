@@ -1,8 +1,6 @@
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { ModesControl } from 'src/components/modes/ModesControl';
+import { makeStyles } from '@material-ui/core/styles';
 import Control from 'src/components/Control.tsx';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,7 +17,7 @@ export function ButtonGroups({ modeSelection, additionalModeSelection }) {
   const classes = useStyles();
 
   return (
-    <Control position="topright">
+    <Control position="top-right">
       <Paper elevation={0} className={classes.paper} style={{ borderWidth: 0 }}>
         {modeSelection}
         <Divider flexItem orientation="vertical" className={classes.divider} />
