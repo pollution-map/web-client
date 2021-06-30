@@ -43,7 +43,6 @@ interface PropertyProps {
 }
 
 const color = magama([100, 0]);
-const colorInverted = magama([0, 100]);
 
 const PropItem = styled.div`
   margin: 8px;
@@ -100,13 +99,14 @@ const StyledPropsContainer = styled.div`
 
 export const PropertiesPopup: React.FC<PopupProps> = ({ x, y, properties }) => {
   const { modesStore } = useStore();
+
   const c = color(properties.value).toString();
-  const bc = colorInverted(properties.value).toString();
   return (
     <StyledPopupContent left={x} top={y} color={c}>
       <StyledPropsContainer>
         {modesStore.ActiveModes.map((m) => (
-          <Property
+          // only display if value exists
+          properties[m.name] && <Property 
             key={m.name}
             modeName={m.name}
             text={m.displayName}
