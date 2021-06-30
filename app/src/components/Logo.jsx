@@ -21,8 +21,8 @@ const StyledCard = styled(Card)`
     transition: margin-bottom 0.5s, width 0.5s;
   }
   &:not(:hover) {
-    margin-bottom: -195px;
-    width: 200px;
+    margin-bottom: -200px;
+    width: 220px;
     transition: margin-bottom 0.2s, width 0.2s;
   }
 `;
@@ -53,10 +53,16 @@ const Caption = ({ children }) => (
   </div>
 );
 
+const StyledLogoWrapper = styled.div`
+  margin-top: 5px;
+`;
+
 export const Logo = () => (
   <Control position="bottom-left" margin="no-bottom">
     <StyledCard>
-      <LogoIcon color="white" />
+      <StyledLogoWrapper>
+        <LogoIcon />
+      </StyledLogoWrapper>
       <TextBody>
         <Caption>Карта воздушного и шумового загрязнения</Caption>
         <TextItem>
@@ -71,7 +77,7 @@ export const Logo = () => (
         </TextItem>
         <TextItem>
           <StyledLink href="https://github.com/polution-map">
-            Polution Map &nbsp; <GitHubIcon />
+            Pollution Map &nbsp; <GitHubIcon />
           </StyledLink>
         </TextItem>
       </TextBody>
