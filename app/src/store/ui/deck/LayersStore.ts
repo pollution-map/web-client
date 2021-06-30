@@ -40,11 +40,11 @@ export class LayersStore {
         autoHighlight: true,
         highlightColor: [255, 255, 255, 20],
         dataComparator: (newData: any, oldData: any): boolean => {
-         
           if (newData.features.length !== oldData.features.length) return false;
 
           for (let i = 0; i < newData.features.length; i += 1)
-            if (newData.features[i].hashCode !== oldData.features[i].hashCode) return false;
+            if (newData.features[i].hashCode !== oldData.features[i].hashCode)
+              return false;
           return true;
         },
         onHover: (info: any) => {

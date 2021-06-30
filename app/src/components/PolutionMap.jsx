@@ -105,6 +105,7 @@ export const PolutionMap = observer(() => {
           onLoad={onMapLoad}
           // mapStyle="mapbox://styles/vfqww/ckq55qrrp0eom17n2qkmkcjd2"
           mapStyle="mapbox://styles/vfqww/ckq8cu7ea0nz417pehvywpm7t"
+          // mapStyle="mapbox://styles/vfqww/ckqjlt39v37lz17qsi1jfcxq4"
           mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
         />
       )}
