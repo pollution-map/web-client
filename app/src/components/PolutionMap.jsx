@@ -14,6 +14,7 @@ import { Button3D } from './map-modes/Button3D';
 import { ModesControl } from './modes/ModesControl';
 import { RangesControl } from './ranges/RangesControl';
 import { useCameraRotation } from './transitions/useCameraRotation';
+import { Preloader } from './preloader/Preloader';
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCES_TOKEN;
@@ -57,72 +58,77 @@ export const PolutionMap = observer(() => {
 
   useCameraRotation(9000);
   return (
-    <DeckGL
-      onViewStateChange={onViewStateChange}
-      ref={deckRef}
-      view={view}
-      initialViewState={mapStore.viewState}
-      onWebGLInitialized={setGLContext}
-      width="100vw"
-      height="100vh"
-      gl={glContext}
-      layers={layersStore.layers}
-      glOptions={{
-        /* To render vector tile polygons correctly */
-        stencil: true,
-      }}
-      parameters={{
-        blendFunc: [
-          GL.SRC_ALPHA,
-          GL.ONE_MINUS_SRC_ALPHA,
-          GL.ONE,
-          GL.ONE_MINUS_SRC_ALPHA,
-        ],
-        blendEquation: GL.FUNC_ADD,
-      }}
-      controller={{
-        scrollZoom: {
-          speed: 0.01,
-          smooth: true,
-        },
-        inertia: true,
-      }}
-      getCursor={({ isDragging }) => {
-        if (isDragging) isolinePickInfoStore.PickInfo = null;
-      }}
-      // provides context to a static map
-      // this allows to use react-map-gl controls
-      // and aslo out custom controls based on Control.tsx
-      ContextProvider={MapContext.Provider}
-    >
-      {glContext && (
-        <StaticMap
-          reuseMaps
-          asyncRender
-          ref={mapRef}
-          gl={glContext}
-          onLoad={onMapLoad}
-          // mapStyle="mapbox://styles/vfqww/ckq55qrrp0eom17n2qkmkcjd2"
-          mapStyle="mapbox://styles/vfqww/ckq8cu7ea0nz417pehvywpm7t"
-          // mapStyle="mapbox://styles/vfqww/ckqjlt39v37lz17qsi1jfcxq4"
-          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
-        />
-      )}
-      <Logo />
-      <ButtonGroups
-        modeSelection={<ModesControl />}
-        additionalModeSelection={<Button3D />}
-      />
-      <CitySelection position="top-left" />
-      <RangesControl orientation="vertical" />
+    <div>
+      {!mapStore.isBaseMapInitialized && <Preloader />}
 
-      {isolinePickInfoStore.PickInfo?.picked && (
-        <PropertiesPopup
-          x={isolinePickInfoStore.PickInfo.x}
-          y={isolinePickInfoStore.PickInfo.y}
-          properties={isolinePickInfoStore.PickInfo.object.properties}
+      <DeckGL
+        onViewStateChange={onViewStateChange}
+        ref={deckRef}
+        view={view}
+        style={{ opacity: `${mapStore.isBaseMapInitialized ? '1' : '0'}` }}
+        initialViewState={mapStore.viewState}
+        onWebGLInitialized={setGLContext}
+        width="100vw"
+        height="100vh"
+        gl={glContext}
+        layers={layersStore.layers}
+        glOptions={{
+          /* To render vector tile polygons correctly */
+          stencil: true,
+        }}
+        parameters={{
+          blendFunc: [
+            GL.SRC_ALPHA,
+            GL.ONE_MINUS_SRC_ALPHA,
+            GL.ONE,
+            GL.ONE_MINUS_SRC_ALPHA,
+          ],
+          blendEquation: GL.FUNC_ADD,
+        }}
+        controller={{
+          scrollZoom: {
+            speed: 0.01,
+            smooth: true,
+          },
+          inertia: true,
+        }}
+        getCursor={({ isDragging }) => {
+          if (isDragging) isolinePickInfoStore.PickInfo = null;
+        }}
+        // provides context to a static map
+        // this allows to use react-map-gl controls
+        // and aslo out custom controls based on Control.tsx
+        ContextProvider={MapContext.Provider}
+      >
+        {glContext && (
+          <StaticMap
+            reuseMaps
+            asyncRender
+            ref={mapRef}
+            gl={glContext}
+            onLoad={onMapLoad}
+            // mapStyle="mapbox://styles/vfqww/ckq55qrrp0eom17n2qkmkcjd2"
+            mapStyle="mapbox://styles/vfqww/ckq8cu7ea0nz417pehvywpm7t"
+            // mapStyle="mapbox://styles/vfqww/ckqjlt39v37lz17qsi1jfcxq4"
+            mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+          />
+        )}
+        <Logo />
+        <ButtonGroups
+          modeSelection={<ModesControl />}
+          additionalModeSelection={<Button3D />}
         />
-      )}
-    </DeckGL>
+        <CitySelection position="top-left" />
+        <RangesControl orientation="vertical" />
+
+        {isolinePickInfoStore.PickInfo?.picked && (
+          <PropertiesPopup
+            x={isolinePickInfoStore.PickInfo.x}
+            y={isolinePickInfoStore.PickInfo.y}
+            properties={isolinePickInfoStore.PickInfo.object.properties}
+          />
+        )}
+      </DeckGL>
+    </div>
   );
 });

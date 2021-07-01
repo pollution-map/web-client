@@ -70,7 +70,13 @@ export const RangesControl = observer(({ orientation }) => {
   return (
     <ArrowControl
       title="Выбор диапазонов"
-      titlePlacemet="left"
+      titlePlacemet={
+        orientation === 'vertical'
+          ? 'left'
+          : orientation === 'horizontal'
+          ? 'top'
+          : null
+      }
       orientation={orientation}
       isActive={isVisiable}
       onToggle={setButtonActive}

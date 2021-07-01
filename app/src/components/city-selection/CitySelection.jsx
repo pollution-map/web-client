@@ -41,9 +41,9 @@ export const CitySelection = observer(({ position }) => {
     <Control position={position}>
       <StyledPapper width="300px">
         <Autocomplete
+          defaultValue={citiesStore.SelectedCity}
           loading={loading}
           options={citiesStore.cities}
-          value={citiesStore.SelectedCity}
           onChange={(_, selectedCity) => {
             setLoading(true);
             citiesStore
