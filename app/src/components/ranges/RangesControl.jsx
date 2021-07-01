@@ -74,7 +74,7 @@ export const RangesControl = observer(({ orientation }) => {
         orientation === 'vertical'
           ? 'left'
           : orientation === 'horizontal'
-          ? 'top'
+          ? 'top-end'
           : null
       }
       orientation={orientation}

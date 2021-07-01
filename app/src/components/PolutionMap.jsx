@@ -119,7 +119,7 @@ export const PolutionMap = observer(() => {
           additionalModeSelection={<Button3D />}
         />
         <CitySelection position="top-left" />
-        <RangesControl orientation="vertical" />
+        <RangesControl orientation="horizontal" />
 
         {isolinePickInfoStore.PickInfo?.picked && (
           <PropertiesPopup
