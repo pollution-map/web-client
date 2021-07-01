@@ -1,8 +1,6 @@
-import center from '@turf/center';
-import { MultiPolygon } from 'geojson';
 import { ICitiesApi } from 'src/api/CitiesApi';
 import { City } from 'src/models/city';
-import { IMeasurement } from 'src/models/measurement';
+import center from '@turf/center';
 import { IMeasurementsStore } from 'src/store/data/MeasurementsStore';
 import { inPolygon } from 'src/utils/filter-measurements';
 
@@ -19,15 +17,6 @@ const fromSuccess = (city: City): CityData => ({
 });
 
 const fromNotSelected = (): CityData => ({});
-
-interface UpdateCityProps {
-  name?: string;
-  isSelected?: boolean;
-  longitude?: number;
-  latitude?: number;
-  borders?: MultiPolygon;
-  measurements?: Array<IMeasurement>;
-}
 
 export class CitiesStore {
   constructor(
@@ -78,7 +67,7 @@ export class CitiesStore {
     if (name) return this.cities.find((c) => c.name === name);
   }
 
-  updateCity(cityName: string, city: UpdateCityProps) {
+  updateCity(cityName: string, city: City) {
     const c = this.getCityByName(cityName);
     if (!c) return;
     this.cities = [
@@ -108,10 +97,10 @@ export class CitiesStore {
       latitude: c.geometry.coordinates[1],
       longitude: c.geometry.coordinates[0],
       measurements: city.measurements
-        ? // filter measurements for city
-          inPolygon(this.measurementsStore.measurements, borders)
-        : // or return existing ones
-          city.measurements,
+        // filter measurements for city
+        ? inPolygon(this.measurementsStore.measurements, borders)
+        // or return existing ones
+        : city.measurements,
     };
 
     this.updateCity(name, newCityInfo);
@@ -122,20 +111,15 @@ export class CitiesStore {
   }
 
   async switchSelectedCity(name: string): Promise<CityData> {
-    this.updateCity(this.SelectedCity?.name ?? '', {
-      ...this.SelectedCity,
-      isSelected: !this.SelectedCity?.isSelected,
-    });
+    
     const target = this.getCityByName(name);
+    if (this.SelectedCity) this.SelectedCity.isSelected = false;
     if (!target) return fromNotSelected();
 
     const { city, error } = await this.loadCityData(name);
     if (error) return fromError(error);
 
-    this.updateCity(this.SelectedCity?.name ?? '', {
-      ...this.SelectedCity,
-      isSelected: !this.SelectedCity?.isSelected,
-    });
+    target.isSelected = true;
     return fromSuccess(city as City);
   }
 }
