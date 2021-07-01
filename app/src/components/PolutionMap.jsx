@@ -4,16 +4,15 @@ import DeckGL, { MapView } from 'deck.gl';
 import { observer } from 'mobx-react-lite';
 import { useCallback, useRef, useState } from 'react';
 import { StaticMap } from 'react-map-gl';
+import { CitySelection } from 'src/components/city-selection/CitySelection';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
 import { useDebouncedCallback } from 'use-debounce/lib';
-import { CitySelection } from 'src/components/city-selection/CitySelection';
-import { useCameraRotation } from './transitions/useCameraRotation';
-import { Logo } from './Logo';
-import { RangesControl } from './ranges/RangesControl';
-import { ModesControl } from './modes/ModesControl';
-import { Button3D } from './map-modes/Button3D';
 import { ButtonGroups } from './ButtonGroups';
+import { Button3D } from './map-modes/Button3D';
+import { ModesControl } from './modes/ModesControl';
+import { RangesControl } from './ranges/RangesControl';
+import { useCameraRotation } from './transitions/useCameraRotation';
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCES_TOKEN;
@@ -49,7 +48,6 @@ export const PolutionMap = observer(() => {
       'land-structure-polygon'
     );
     map.touchZoomRotate.disableRotation();
-
     mapStore.setBaseMapInitialized();
   }, []);
 
@@ -62,7 +60,6 @@ export const PolutionMap = observer(() => {
   }, 100);
 
   useCameraRotation(9000);
-
   return (
     <DeckGL
       onViewStateChange={onViewStateChange}

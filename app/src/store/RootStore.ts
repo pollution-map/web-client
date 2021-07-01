@@ -9,14 +9,20 @@ import { PickInfoStore } from './ui/deck/PickInfoStore';
 import { IsolinesStore } from './ui/IsolinesStore';
 import { ModesStore } from './ui/ModesStore';
 import { RangesStore } from './ui/RangesStore';
+import { CitiesStore } from './ui/CitiesStore';
+import { ApiStore } from './api/ApiStore';
 
 export class RootStore {
+  // -- api --
+  apiStore: ApiStore;
+
   // -- data --
   measurementsStore: IMeasurementsStore;
 
   // --  ui  --
   modesStore: ModesStore;
   rangesStore: RangesStore;
+  citiesStore: CitiesStore;
   isolinesStore: IsolinesStore;
 
   // -- Deck Gl --
@@ -25,14 +31,24 @@ export class RootStore {
   layersStore: LayersStore;
 
   constructor() {
+    // -- api --
+    this.apiStore = makeAutoObservable(new ApiStore());
+
     // -- data --
     this.measurementsStore = makeAutoObservable(new MockMeasurementsStore());
 
     // --  ui  --
+    this.citiesStore = makeAutoObservable(
+      new CitiesStore(this.apiStore.citiesApi)
+    );
     this.rangesStore = makeAutoObservable(new RangesStore());
     this.modesStore = makeAutoObservable(new ModesStore());
     this.isolinesStore = makeAutoObservable(
-      new IsolinesStore(this.modesStore, this.measurementsStore)
+      new IsolinesStore(
+        this.modesStore,
+        this.measurementsStore,
+        this.citiesStore
+      )
     );
 
     // -- Deck Gl --

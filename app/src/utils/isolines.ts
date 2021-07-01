@@ -51,12 +51,13 @@ export interface IActiveParams {
 }
 
 export const comboisolines = (
-  borders: Array<GeoPoint>,
+  borders: Array<GeoPoint> | undefined,
   data: Array<GeoPointO<WeightObject>>,
   modes: IActiveParams,
   smooth: number = 4,
   configure: (contour: ContourFN) => ContourFN = (c) => c.thresholds(30)
 ): Isolines => {
+  if (!borders) return NoIsolines;
   const acitveModes = Object.fromEntries(
     Object.entries(modes).filter(([modeName, isActive]) => isActive)
   );

@@ -42,9 +42,9 @@ const StyledRangesControl = styled.div`
   &&.sweep-exit {
     transform: ${({ orientation }) =>
       orientation === 'vertical'
-        ? 'translateY()'
+        ? 'translateY(0)'
         : orientation === 'horizontal'
-        ? 'translateX()'
+        ? 'translateX(0)'
         : null};
     opacity: 1;
   }
