@@ -1,3 +1,4 @@
+import { Feature, Point } from 'geojson';
 import {
   GeoPointO,
   Latitude,
@@ -11,16 +12,17 @@ export interface IMeasurement {
   value: WeightObject;
 }
 
-export const asGeoPoint = (measure: IMeasurement): GeoPointO<WeightObject> => {
-  return [measure.latitude, measure.longitude, measure.value];
-};
-
-export const asMeasure = ([
-  latitude,
-  longitude,
-  value,
-]: GeoPointO<WeightObject>): IMeasurement => ({
-  latitude,
-  longitude,
-  value,
-});
+export function measureFromGeoPoint(geoPointO: GeoPointO<WeightObject>): IMeasurement {
+  return {
+    latitude: geoPointO[0],
+    longitude: geoPointO[1],
+    value: geoPointO[2],
+  }
+}
+export function measureFromFeature(feature: Feature<Point, WeightObject>): IMeasurement {
+  return {
+    latitude: feature.geometry.coordinates[0],
+    longitude: feature.geometry.coordinates[1],
+    value: feature.properties,
+  }
+}

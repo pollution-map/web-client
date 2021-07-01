@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { CircularProgress, Paper } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
@@ -30,6 +31,7 @@ export const CitySelection = observer(({ position }) => {
       ...prevViewState,
       latitude: value.latitude,
       longitude: value.longitude,
+      zoom: 11.9,
       transitionDuration: 'auto',
       transitionInterpolator: flyToInterpolator,
     }));

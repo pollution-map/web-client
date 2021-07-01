@@ -1,3 +1,4 @@
+import { IMeasurement } from './measurement';
 import { MultiPolygon } from 'geojson';
 
 export interface City {
@@ -6,4 +7,5 @@ export interface City {
   longitude?: number;
   latitude?: number;
   borders?: MultiPolygon;
+  measurements?: Array<IMeasurement>;
 }

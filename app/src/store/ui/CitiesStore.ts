@@ -1,10 +1,12 @@
 import { ICitiesApi } from 'src/api/CitiesApi';
 import { City } from 'src/models/city';
 import center from '@turf/center';
+import { IMeasurementsStore } from 'src/store/data/MeasurementsStore';
+import { inPolygon } from 'src/utils/filter-measurements';
 
 interface CityData {
-  city?: City,
-  error?: string,
+  city?: City;
+  error?: string;
 }
 const fromError = (errorMessage: string): CityData => ({
   error: errorMessage,
@@ -17,7 +19,10 @@ const fromSuccess = (city: City): CityData => ({
 const fromNotSelected = (): CityData => ({});
 
 export class CitiesStore {
-  constructor(private citiesApi: ICitiesApi) {
+  constructor(
+    private citiesApi: ICitiesApi,
+    private measurementsStore: IMeasurementsStore
+  ) {
     this.loadCityData(this.SelectedCity?.name as string);
   }
 
@@ -25,26 +30,32 @@ export class CitiesStore {
     {
       name: 'Ижевск',
       isSelected: true,
+      measurements: [],
     },
     {
       name: 'Набережные Челны',
       isSelected: false,
+      measurements: [],
     },
     {
       name: 'Москва',
       isSelected: false,
+      measurements: [],
     },
     {
       name: 'Санкт-Петербург',
       isSelected: false,
+      measurements: [],
     },
     {
       name: 'Камчатка',
       isSelected: false,
+      measurements: [],
     },
     {
       name: 'testCity',
       isSelected: false,
+      measurements: [],
     },
   ];
 
@@ -70,9 +81,10 @@ export class CitiesStore {
 
   async loadCityData(name: string): Promise<CityData> {
     const city = this.getCityByName(name);
-    if (!city) return fromError('Не удалось загрузить границы выбранного города.');
+    if (!city)
+      return fromError('Не удалось загрузить границы выбранного города.');
     if (city.borders) return fromSuccess(city);
-    
+
     const borders = await this.citiesApi.getCityBorders(name);
     if (!borders) {
       return fromError('Не удалось загрузить границы выбранного города.');
@@ -84,6 +96,11 @@ export class CitiesStore {
       borders,
       latitude: c.geometry.coordinates[1],
       longitude: c.geometry.coordinates[0],
+      measurements: city.measurements
+        // filter measurements for city
+        ? inPolygon(this.measurementsStore.measurements, borders)
+        // or return existing ones
+        : city.measurements,
     };
 
     this.updateCity(name, newCityInfo);
@@ -99,9 +116,9 @@ export class CitiesStore {
     const target = this.getCityByName(name);
     if (!target) return fromNotSelected();
 
-    const { city, error } = (await this.loadCityData(name));
+    const { city, error } = await this.loadCityData(name);
     if (error) return fromError(error);
-    
+
     target.isSelected = true;
     return fromSuccess(city as City);
   }

@@ -39,16 +39,12 @@ export class RootStore {
 
     // --  ui  --
     this.citiesStore = makeAutoObservable(
-      new CitiesStore(this.apiStore.citiesApi)
+      new CitiesStore(this.apiStore.citiesApi, this.measurementsStore)
     );
     this.rangesStore = makeAutoObservable(new RangesStore());
     this.modesStore = makeAutoObservable(new ModesStore());
     this.isolinesStore = makeAutoObservable(
-      new IsolinesStore(
-        this.modesStore,
-        this.measurementsStore,
-        this.citiesStore
-      )
+      new IsolinesStore(this.modesStore, this.citiesStore)
     );
 
     // -- Deck Gl --

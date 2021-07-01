@@ -1,5 +1,5 @@
 import { getGeoPointsO } from 'src/data/testdata';
-import { asMeasure, IMeasurement } from 'src/models/measurement';
+import { measureFromGeoPoint, IMeasurement } from 'src/models/measurement';
 
 export interface IMeasurementsStore {
   get measurements(): Array<IMeasurement>;
@@ -10,6 +10,6 @@ export class MockMeasurementsStore implements IMeasurementsStore {
     return getGeoPointsO({
       polution: 123,
       noise: 70,
-    }).map((gp) => asMeasure(gp));
+    }).map((gp) => measureFromGeoPoint(gp));
   }
 }
