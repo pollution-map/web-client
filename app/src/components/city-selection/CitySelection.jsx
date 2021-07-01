@@ -1,9 +1,8 @@
-import { Paper } from '@material-ui/core';
+import { CircularProgress, Paper } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
 import MuiAlert from '@material-ui/lab/Alert';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { trace } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useCallback, useState } from 'react';
 import { FlyToInterpolator } from 'react-map-gl';
@@ -24,6 +23,7 @@ const flyToInterpolator = new FlyToInterpolator();
 export const CitySelection = observer(({ position }) => {
   const { citiesStore, mapStore } = useStore();
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const flyTo = useCallback((value) => {
     mapStore.changeViewState((prevViewState) => ({
@@ -34,23 +34,43 @@ export const CitySelection = observer(({ position }) => {
       transitionInterpolator: flyToInterpolator,
     }));
   }, []);
-  trace(true);
 
   return (
     <Control position={position}>
       <StyledPapper width="300px">
         <Autocomplete
+          loading={loading}
           options={citiesStore.cities}
           value={citiesStore.SelectedCity}
           onChange={(_, selectedCity) => {
-            citiesStore.switchSelectedCity(selectedCity?.name).then((err) => {
-              if (selectedCity && !err) flyTo(selectedCity);
-              setError(err);
-            });
+            setLoading(true);
+            citiesStore
+              .switchSelectedCity(selectedCity?.name)
+              .then((cityData) => {
+                if (cityData.city) flyTo(cityData.city);
+                setError(cityData.error);
+                setLoading(false);
+              });
+            return selectedCity;
           }}
           getOptionLabel={(option) => option.name}
           renderInput={(params) => (
-            <TextField {...params} label="Текущий город" variant="filled" />
+            <TextField
+              {...params}
+              label="Текущий город"
+              variant="filled"
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
           )}
         />
       </StyledPapper>

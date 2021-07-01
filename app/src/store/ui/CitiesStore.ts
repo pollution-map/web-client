@@ -1,7 +1,20 @@
-import { autorun, runInAction } from 'mobx';
 import { ICitiesApi } from 'src/api/CitiesApi';
 import { City } from 'src/models/city';
 import center from '@turf/center';
+
+interface CityData {
+  city?: City,
+  error?: string,
+}
+const fromError = (errorMessage: string): CityData => ({
+  error: errorMessage,
+});
+
+const fromSuccess = (city: City): CityData => ({
+  city,
+});
+
+const fromNotSelected = (): CityData => ({});
 
 export class CitiesStore {
   constructor(private citiesApi: ICitiesApi) {
@@ -26,6 +39,10 @@ export class CitiesStore {
       isSelected: false,
     },
     {
+      name: 'Камчатка',
+      isSelected: false,
+    },
+    {
       name: 'testCity',
       isSelected: false,
     },
@@ -35,42 +52,57 @@ export class CitiesStore {
     return this.cities.find((c) => c.isSelected);
   }
 
-  async loadCityData(name: string): Promise<string | undefined> {
-    const city = this.getCityByName(name);
-    if (!city) return 'Не удалось загрузить границы выбранного города.';
-    if (city.borders) return;
-    const borders = await this.citiesApi.getCityBorders(name);
-    let errorMessage;
-    runInAction(() => {
-      if (!borders) {
-        errorMessage = 'Не удалось загрузить границы выбранного города.';
-        return;
-      }
-      runInAction(() => {
-        city.borders = borders;
-      });
-      const c = center(borders);
-      city.longitude = c.geometry.coordinates[0];
-      city.latitude = c.geometry.coordinates[1];
-      console.log(name, borders);
-    });
-    return errorMessage;
-  }
-
   getCityByName(name: string) {
     if (name) return this.cities.find((c) => c.name === name);
   }
 
-  async switchSelectedCity(name: string) {
+  updateCity(cityName: string, city: City) {
+    const c = this.getCityByName(cityName);
+    if (!c) return;
+    this.cities = [
+      ...this.cities.filter((c) => c.name !== cityName),
+      {
+        ...c,
+        ...city,
+      },
+    ];
+  }
+
+  async loadCityData(name: string): Promise<CityData> {
+    const city = this.getCityByName(name);
+    if (!city) return fromError('Не удалось загрузить границы выбранного города.');
+    if (city.borders) return fromSuccess(city);
+    
+    const borders = await this.citiesApi.getCityBorders(name);
+    if (!borders) {
+      return fromError('Не удалось загрузить границы выбранного города.');
+    }
+
+    const c = center(borders);
+    const newCityInfo = {
+      ...city,
+      borders,
+      latitude: c.geometry.coordinates[1],
+      longitude: c.geometry.coordinates[0],
+    };
+
+    this.updateCity(name, newCityInfo);
+
+    console.log(name, borders);
+
+    return fromSuccess(newCityInfo);
+  }
+
+  async switchSelectedCity(name: string): Promise<CityData> {
     if (this.SelectedCity) this.SelectedCity.isSelected = false;
 
     const target = this.getCityByName(name);
-    if (!target) return;
+    if (!target) return fromNotSelected();
 
-    const errorMessage = (await this.loadCityData(name)) as string | undefined;
-    if (errorMessage) return errorMessage;
-    runInAction(() => {
-      target.isSelected = true;
-    });
+    const { city, error } = (await this.loadCityData(name));
+    if (error) return fromError(error);
+    
+    target.isSelected = true;
+    return fromSuccess(city as City);
   }
 }

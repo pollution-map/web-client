@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { ArrowControl } from 'src/components/ranges/ArrowControl';
 import { RangeSlider } from 'src/components/ranges/RangeSlider';
@@ -64,9 +64,9 @@ export const RangesControl = observer(({ orientation }) => {
   const { rangesStore } = useStore();
   const [isVisiable, setButtonActive] = useState(false);
 
-  const onRangeChange = (range, values) => {
+  const onRangeChange = useCallback((range, values) => {
     rangesStore.setRangeValues(range, values);
-  };
+  });
   return (
     <ArrowControl
       title="Выбор диапазонов"
@@ -74,7 +74,7 @@ export const RangesControl = observer(({ orientation }) => {
       orientation={orientation}
       isActive={isVisiable}
       onToggle={setButtonActive}
-      position="bottomright"
+      position="bottom-right"
     >
       <CSSTransition
         classNames="sweep"

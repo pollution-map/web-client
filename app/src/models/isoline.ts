@@ -1,4 +1,4 @@
-import { HashCode, hashCode } from 'src/utils/hashCode';
+import { HashCode } from 'src/utils/hashCode';
 import { Feature, FeatureCollection, MultiPolygon } from 'geojson';
 import { WeightObjectV } from './geo-point';
 

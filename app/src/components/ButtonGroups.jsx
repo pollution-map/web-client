@@ -17,7 +17,7 @@ export function ButtonGroups({ modeSelection, additionalModeSelection }) {
   const classes = useStyles();
 
   return (
-    <Control position="topright">
+    <Control position="top-right">
       <Paper elevation={0} className={classes.paper} style={{ borderWidth: 0 }}>
         {modeSelection}
         <Divider flexItem orientation="vertical" className={classes.divider} />

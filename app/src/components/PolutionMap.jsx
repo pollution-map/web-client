@@ -3,12 +3,13 @@ import GL from '@luma.gl/constants';
 import DeckGL, { MapView } from 'deck.gl';
 import { observer } from 'mobx-react-lite';
 import { useCallback, useRef, useState } from 'react';
-import { StaticMap } from 'react-map-gl';
 import { CitySelection } from 'src/components/city-selection/CitySelection';
+import { MapContext, StaticMap } from 'react-map-gl';
 import { PropertiesPopup } from 'src/components/popups/PropertiesPopup';
 import { useStore } from 'src/store/RootStoreContext';
 import { useDebouncedCallback } from 'use-debounce/lib';
 import { ButtonGroups } from './ButtonGroups';
+import { Logo } from './Logo';
 import { Button3D } from './map-modes/Button3D';
 import { ModesControl } from './modes/ModesControl';
 import { RangesControl } from './ranges/RangesControl';
@@ -47,7 +48,6 @@ export const PolutionMap = observer(() => {
       // Optionally define id from Mapbox layer stack under which to add deck layer
       'land-structure-polygon'
     );
-    map.touchZoomRotate.disableRotation();
     mapStore.setBaseMapInitialized();
   }, []);
 
@@ -55,15 +55,10 @@ export const PolutionMap = observer(() => {
     mapStore.updateViewState(viewState);
   }, 100);
 
-  const onInteractionStateChange = useDebouncedCallback((interactionState) => {
-    mapStore.updateInteractionState(interactionState);
-  }, 100);
-
   useCameraRotation(9000);
   return (
     <DeckGL
       onViewStateChange={onViewStateChange}
-      onInteractionStateChange={onInteractionStateChange}
       ref={deckRef}
       view={view}
       initialViewState={mapStore.viewState}
@@ -95,32 +90,39 @@ export const PolutionMap = observer(() => {
       getCursor={({ isDragging }) => {
         if (isDragging) isolinePickInfoStore.PickInfo = null;
       }}
+      // provides context to a static map
+      // this allows to use react-map-gl controls
+      // and aslo out custom controls based on Control.tsx
+      ContextProvider={MapContext.Provider}
     >
-      <StaticMap
-        reuseMaps
-        asyncRender
-        ref={mapRef}
-        gl={glContext}
-        onLoad={onMapLoad}
-        // mapStyle="mapbox://styles/vfqww/ckq55qrrp0eom17n2qkmkcjd2"
-        mapStyle="mapbox://styles/vfqww/ckq8cu7ea0nz417pehvywpm7t"
-        mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+      {glContext && (
+        <StaticMap
+          reuseMaps
+          asyncRender
+          ref={mapRef}
+          gl={glContext}
+          onLoad={onMapLoad}
+          // mapStyle="mapbox://styles/vfqww/ckq55qrrp0eom17n2qkmkcjd2"
+          mapStyle="mapbox://styles/vfqww/ckq8cu7ea0nz417pehvywpm7t"
+          // mapStyle="mapbox://styles/vfqww/ckqjlt39v37lz17qsi1jfcxq4"
+          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+        />
+      )}
+      <Logo />
+      <ButtonGroups
+        modeSelection={<ModesControl />}
+        additionalModeSelection={<Button3D />}
       />
-      {isolinePickInfoStore.PickInfo?.object && (
+      <CitySelection position="top-left" />
+      <RangesControl orientation="vertical" />
+
+      {isolinePickInfoStore.PickInfo?.picked && (
         <PropertiesPopup
           x={isolinePickInfoStore.PickInfo.x}
           y={isolinePickInfoStore.PickInfo.y}
           properties={isolinePickInfoStore.PickInfo.object.properties}
         />
       )}
-
-      <ButtonGroups
-        modeSelection={<ModesControl />}
-        additionalModeSelection={<Button3D />}
-      />
-      <CitySelection position="topleft" />
-      <RangesControl orientation="vertical" />
-      {/* <Logo /> */}
     </DeckGL>
   );
 });

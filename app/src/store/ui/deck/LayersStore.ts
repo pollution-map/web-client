@@ -6,6 +6,7 @@ import { magama } from 'src/utils/colorScheme';
 import { colorToArray } from 'src/utils/colorToArray';
 import { MapStore } from './MapStore';
 import { PickInfoStore } from './PickInfoStore';
+
 const color = magama([-20, 100]);
 
 export class LayersStore {
@@ -21,10 +22,10 @@ export class LayersStore {
         visible: this.mapStore.isBaseMapInitialized,
         id: 'isolines',
         data: this.mapStore.is3D
-          ? this.isolinesStore.isolinesZ.features
-          : this.isolinesStore.isolines.features,
+          ? this.isolinesStore.isolinesZ
+          : this.isolinesStore.isolines,
         pickable: true,
-        filled: true,
+        // filled: true,
         extruded: true,
         stroked: true,
         parameters: {
@@ -39,11 +40,11 @@ export class LayersStore {
         autoHighlight: true,
         highlightColor: [255, 255, 255, 20],
         dataComparator: (newData: any, oldData: any): boolean => {
-          if (newData.length !== oldData.length) return false;
+          if (newData.features.length !== oldData.features.length) return false;
 
-          for (let i = 0; i < newData.length; i += 1)
-            if (newData[i].hashCode !== oldData[i].hashCode) return false;
-
+          for (let i = 0; i < newData.features.length; i += 1)
+            if (newData.features[i].hashCode !== oldData.features[i].hashCode)
+              return false;
           return true;
         },
         onHover: (info: any) => {
@@ -70,8 +71,12 @@ export class LayersStore {
         transitions: {
           getElevation: {
             type: 'interpolation',
-            duration: 800,
+            duration: 700,
             easing: easeSinOut,
+            //@ts-ignore
+            enter: (v) => {
+              return this.mapStore.is3D ? [0] : v;
+            },
           },
         },
         material: {

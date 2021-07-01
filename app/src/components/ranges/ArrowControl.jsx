@@ -5,7 +5,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ArrowBackIosRoundedIcon from '@material-ui/icons/ArrowBackIosRounded';
 import { useState } from 'react';
 import styled from 'styled-components';
-import LeafletControlWrapper from 'src/components/Control.tsx';
+import Control from 'src/components/Control.tsx';
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -65,7 +65,7 @@ export function ArrowControl({
 }) {
   const [isButtonActive, setButtonActive] = useState(isActive);
   return (
-    <LeafletControlWrapper position={position}>
+    <Control position={position}>
       <StyledWrapper orientation={orientation}>
         <ChildrenWrapper>{children}</ChildrenWrapper>
         <LightTooltip title={title} placement={titlePlacemet}>
@@ -84,6 +84,6 @@ export function ArrowControl({
           </StyledButton>
         </LightTooltip>
       </StyledWrapper>
-    </LeafletControlWrapper>
+    </Control>
   );
 }
