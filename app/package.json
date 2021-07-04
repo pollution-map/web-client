@@ -12,6 +12,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/styles": "^4.11.4",
+    "@turf/boolean-point-in-polygon": "^6.4.0",
     "@turf/boolean-within": "^6.4.0",
     "@turf/center": "^6.4.0",
     "@turf/explode": "^6.4.0",

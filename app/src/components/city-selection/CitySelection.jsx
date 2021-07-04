@@ -4,12 +4,13 @@ import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
 import MuiAlert from '@material-ui/lab/Alert';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { autorun, when } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { useCallback, useState } from 'react';
-import { FlyToInterpolator } from 'react-map-gl';
+import { useEffect, useState } from 'react';
 import Control from 'src/components/Control';
 import { useStore } from 'src/store/RootStoreContext';
 import styled from 'styled-components';
+import { useFlyTo } from '../transitions/useFlyTo';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -19,41 +20,41 @@ const StyledPapper = styled(Paper)`
   ${({ width }) => `width: ${width}`};
   opacity: 0.6;
 `;
-const flyToInterpolator = new FlyToInterpolator();
 
 export const CitySelection = observer(({ position }) => {
-  const { citiesStore, mapStore } = useStore();
+  const { citiesStore } = useStore();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+  const flyTo = useFlyTo();
 
-  const flyTo = useCallback((value) => {
-    mapStore.changeViewState((prevViewState) => ({
-      ...prevViewState,
-      latitude: value.latitude,
-      longitude: value.longitude,
-      zoom: 11.9,
-      transitionDuration: 'auto',
-      transitionInterpolator: flyToInterpolator,
-    }));
+  useEffect(() => {
+    autorun(() => {
+      if (citiesStore.loadingError) setError(citiesStore.loadingError);
+    });
   }, []);
 
   return (
     <Control position={position}>
       <StyledPapper width="300px">
         <Autocomplete
-          defaultValue={citiesStore.SelectedCity}
+          value={citiesStore.SelectedCity}
           loading={loading}
           options={citiesStore.cities}
           onChange={(_, selectedCity) => {
+            if (!selectedCity) return;
+
             setLoading(true);
-            citiesStore
-              .switchSelectedCity(selectedCity?.name)
-              .then((cityData) => {
-                if (cityData.city) flyTo(cityData.city);
-                setError(cityData.error);
+            citiesStore.setSelectedCity(selectedCity?.name);
+            when(
+              () =>
+                citiesStore.SelectedCity.latitude &&
+                citiesStore.SelectedCity.longitude,
+              () => {
                 setLoading(false);
-              });
-            return selectedCity;
+                setError();
+                flyTo(citiesStore.SelectedCity);
+              }
+            );
           }}
           getOptionLabel={(option) => option.name}
           renderInput={(params) => (

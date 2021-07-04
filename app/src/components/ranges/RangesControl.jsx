@@ -1,11 +1,12 @@
 /* eslint-disable no-nested-ternary */
 import { observer } from 'mobx-react-lite';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { ArrowControl } from 'src/components/ranges/ArrowControl';
 import { RangeSlider } from 'src/components/ranges/RangeSlider';
 import { useStore } from 'src/store/RootStoreContext';
 import styled from 'styled-components';
+import { useDebouncedCallback } from 'use-debounce/lib';
 
 const StyledRangesControl = styled.div`
   ${({ orientation }) => orientation === 'horizontal' && `margin-right: 2vh`};
@@ -64,9 +65,9 @@ export const RangesControl = observer(({ orientation }) => {
   const { rangesStore } = useStore();
   const [isVisiable, setButtonActive] = useState(false);
 
-  const onRangeChange = useCallback((range, values) => {
+  const onRangeChange = useDebouncedCallback((range, values) => {
     rangesStore.setRangeValues(range, values);
-  });
+  }, 300);
   return (
     <ArrowControl
       title="Выбор диапазонов"
@@ -89,9 +90,9 @@ export const RangesControl = observer(({ orientation }) => {
         unmountOnExit
       >
         <StyledRangesControl orientation={orientation}>
-          {rangesStore.ranges.map((r) => (
+          {rangesStore.Ranges.map((r) => (
             <RangeSlider
-              key={r.name}
+              key={`slider${r.name}`}
               range={r}
               onRangeChange={onRangeChange}
               orientation={orientation}

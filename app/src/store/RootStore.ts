@@ -1,23 +1,26 @@
-import { MapStore } from './ui/deck/MapStore';
 import { makeAutoObservable } from 'mobx';
+import { ApiStore } from './api/ApiStore';
 import {
-  IMeasurementsStore,
-  MockMeasurementsStore,
+  FilteredMeasurementsStore,
+  IFilteredMeasurementsStore
+} from './data/FilteredMeasurementsStore';
+import {
+  MockMeasurementsStore
 } from './data/MeasurementsStore';
+import { CitiesStore } from './ui/CitiesStore';
 import { LayersStore } from './ui/deck/LayersStore';
+import { MapStore } from './ui/deck/MapStore';
 import { PickInfoStore } from './ui/deck/PickInfoStore';
 import { IsolinesStore } from './ui/IsolinesStore';
 import { ModesStore } from './ui/ModesStore';
 import { RangesStore } from './ui/RangesStore';
-import { CitiesStore } from './ui/CitiesStore';
-import { ApiStore } from './api/ApiStore';
 
 export class RootStore {
   // -- api --
   apiStore: ApiStore;
 
   // -- data --
-  measurementsStore: IMeasurementsStore;
+  filteredMeasurementsStore: IFilteredMeasurementsStore;
 
   // --  ui  --
   modesStore: ModesStore;
@@ -35,16 +38,21 @@ export class RootStore {
     this.apiStore = makeAutoObservable(new ApiStore());
 
     // -- data --
-    this.measurementsStore = makeAutoObservable(new MockMeasurementsStore());
+    this.filteredMeasurementsStore = new FilteredMeasurementsStore(
+      makeAutoObservable(new MockMeasurementsStore())
+    );
 
     // --  ui  --
-    this.citiesStore = makeAutoObservable(
-      new CitiesStore(this.apiStore.citiesApi, this.measurementsStore)
+    this.citiesStore = new CitiesStore(
+      this.apiStore.citiesApi,
+      this.filteredMeasurementsStore
     );
-    this.rangesStore = makeAutoObservable(new RangesStore());
+    this.rangesStore = new RangesStore(this.filteredMeasurementsStore);
     this.modesStore = makeAutoObservable(new ModesStore());
-    this.isolinesStore = makeAutoObservable(
-      new IsolinesStore(this.modesStore, this.citiesStore)
+    this.isolinesStore = new IsolinesStore(
+      this.modesStore,
+      this.filteredMeasurementsStore,
+      this.citiesStore
     );
 
     // -- Deck Gl --

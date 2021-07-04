@@ -1,7 +1,11 @@
-export type RangeValues = [number, number] | [number];
+export type RangeValues = [number, number];
 
-export interface IRange {
+type DomainFn<T> = (value: number) => T;
+type ViewFn<T> = (value: T) => string;
+
+export interface IRange<T> {
   name: string;
   values: RangeValues;
-  domainFn: (value: number) => string;
+  domainFn: DomainFn<T>;
+  viewFn: ViewFn<T>;
 }

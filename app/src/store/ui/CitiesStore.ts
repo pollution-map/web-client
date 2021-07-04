@@ -1,8 +1,18 @@
-import { ICitiesApi } from 'src/api/CitiesApi';
-import { City } from 'src/models/city';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import center from '@turf/center';
-import { IMeasurementsStore } from 'src/store/data/MeasurementsStore';
-import { inPolygon } from 'src/utils/filter-measurements';
+import {
+  action,
+  autorun,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+  toJS,
+} from 'mobx';
+import { ICitiesApi } from 'src/api/cities/ICitiesApi';
+import { City } from 'src/models/city';
+import { asGeoPoint } from 'src/models/geo-point';
+import { IFilteredMeasurementsStore } from 'src/store/data/FilteredMeasurementsStore';
 
 interface CityData {
   city?: City;
@@ -21,41 +31,68 @@ const fromNotSelected = (): CityData => ({});
 export class CitiesStore {
   constructor(
     private citiesApi: ICitiesApi,
-    private measurementsStore: IMeasurementsStore
+    private measurementsStore: IFilteredMeasurementsStore
   ) {
-    this.loadCityData(this.SelectedCity?.name as string);
+    makeObservable(this, {
+      cities: observable,
+      SelectedCity: computed,
+      updateCity: action,
+      setSelectedCity: action,
+      loadCityData: action,
+      loadingError: observable,
+    });
+
+    autorun(() => {
+      this.loadCityData(this.SelectedCity?.name as string).then((cityData) => {
+        runInAction(() => {
+          this.loadingError = cityData.error;
+          console.log(`loading error ${cityData.error}`);
+        });
+      });
+    });
+
+    autorun(() => {
+      const city = toJS(this.SelectedCity);
+      this.measurementsStore.addOrUpdateFilter({
+        name: 'borders-filter',
+        predicate: (measurement) => {
+          if (!city?.borders) return false;
+          const inPolygon = booleanPointInPolygon(
+            asGeoPoint(measurement),
+            city.borders
+          );
+          return inPolygon;
+        },
+      });
+    });
   }
+
+  loadingError?: string;
 
   cities: Array<City> = [
     {
       name: 'Ижевск',
       isSelected: true,
-      measurements: [],
     },
     {
       name: 'Набережные Челны',
       isSelected: false,
-      measurements: [],
     },
     {
       name: 'Москва',
       isSelected: false,
-      measurements: [],
     },
     {
       name: 'Санкт-Петербург',
       isSelected: false,
-      measurements: [],
     },
     {
       name: 'Камчатка',
       isSelected: false,
-      measurements: [],
     },
     {
       name: 'testCity',
       isSelected: false,
-      measurements: [],
     },
   ];
 
@@ -96,30 +133,15 @@ export class CitiesStore {
       borders,
       latitude: c.geometry.coordinates[1],
       longitude: c.geometry.coordinates[0],
-      measurements: city.measurements
-        // filter measurements for city
-        ? inPolygon(this.measurementsStore.measurements, borders)
-        // or return existing ones
-        : city.measurements,
     };
 
     this.updateCity(name, newCityInfo);
 
-    console.log(name, borders);
-
     return fromSuccess(newCityInfo);
   }
 
-  async switchSelectedCity(name: string): Promise<CityData> {
-    
-    const target = this.getCityByName(name);
-    if (this.SelectedCity) this.SelectedCity.isSelected = false;
-    if (!target) return fromNotSelected();
-
-    const { city, error } = await this.loadCityData(name);
-    if (error) return fromError(error);
-
-    target.isSelected = true;
-    return fromSuccess(city as City);
+  setSelectedCity(name: string) {
+    this.cities.forEach((c) => (c.isSelected = false));
+    this.getCityByName(name)!.isSelected = true;
   }
 }

@@ -51,7 +51,7 @@ export function RangeSlider({ range, onRangeChange, orientation }) {
         <Slider
           orientation={orientation}
           defaultValue={range.values}
-          valueLabelFormat={(v) => range.domainFn(v)}
+          valueLabelFormat={(v) => range.viewFn(range.domainFn(v))}
           valueLabelDisplay="auto"
           onChange={(_, v) => onRangeChange(range, v)}
         />

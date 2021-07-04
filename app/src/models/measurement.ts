@@ -1,28 +1,33 @@
+import { point } from '@turf/helpers';
 import { Feature, Point } from 'geojson';
-import {
-  GeoPointO,
-  Latitude,
-  Longitude,
-  WeightObject,
-} from 'src/models/geo-point';
+import { Latitude, Longitude, WeightObject } from 'src/models/geo-point';
+
+export interface IMeasurementProps {
+  timestamp: Date;
+  value: WeightObject;
+}
 
 export interface IMeasurement {
   latitude: Latitude;
   longitude: Longitude;
-  value: WeightObject;
+  props: IMeasurementProps;
 }
 
-export function measureFromGeoPoint(geoPointO: GeoPointO<WeightObject>): IMeasurement {
-  return {
-    latitude: geoPointO[0],
-    longitude: geoPointO[1],
-    value: geoPointO[2],
-  }
+export function measureToPoint(
+  measure: IMeasurement
+): Feature<Point, IMeasurementProps> {
+  return point([measure.latitude, measure.longitude], measure.props);
 }
-export function measureFromFeature(feature: Feature<Point, WeightObject>): IMeasurement {
+
+export function measureFromPoint(
+  feature: Feature<Point, IMeasurementProps>
+): IMeasurement {
   return {
     latitude: feature.geometry.coordinates[0],
     longitude: feature.geometry.coordinates[1],
-    value: feature.properties,
-  }
+    props: {
+      value: feature.properties.value,
+      timestamp: feature.properties.timestamp,
+    },
+  };
 }

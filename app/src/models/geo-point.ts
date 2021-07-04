@@ -1,17 +1,18 @@
 import { IMeasurement } from './measurement';
 import explode from '@turf/explode';
-import { FeatureCollection, Point, MultiPolygon } from 'geojson';
+import { MultiPolygon, Polygon } from 'geojson';
 export type Latitude = number;
 export type Longitude = number;
 
+// geo points are mainly consumed by isolinses creator
 export type GeoPoint = [Latitude, Longitude];
 
-export const asGeoPoint = (measure: IMeasurement): GeoPointO<WeightObject> => {
-  return [measure.latitude, measure.longitude, measure.value];
+export const asGeoPoint = (measure: IMeasurement): GeoPoint => {
+  return [measure.latitude, measure.longitude];
 };
 
 export function asGeoPoints(
-  features: MultiPolygon | undefined
+  features: MultiPolygon | Polygon | undefined
 ): Array<GeoPoint> | undefined {
   return features
     ? explode(features).features.map((f) => [
@@ -33,8 +34,12 @@ export interface WeightObjectV extends WeightObject {
 }
 export type GeoPointO<WeightObject> = [Latitude, Longitude, WeightObject];
 
+export const asGeoPointO = (measure: IMeasurement): GeoPointO<WeightObject> => {
+  return [measure.latitude, measure.longitude, measure.props.value];
+};
+
 export function asGeoPointsO(
   measurements: Array<IMeasurement> | undefined
 ): Array<GeoPointO<WeightObject>> | undefined {
-  return measurements?.map((m) => [m.latitude, m.longitude, m.value]);
+  return measurements?.map((m) => [m.latitude, m.longitude, m.props.value]);
 }
