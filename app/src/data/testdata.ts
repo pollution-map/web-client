@@ -1,3 +1,4 @@
+import { Feature, FeatureCollection, Point } from 'geojson';
 import { IMeasurement } from 'src/models/measurement';
 import izhevskBorders from 'src/data/izhevsk-borders.json';
 import points from 'src/data/testdata.json';
@@ -33,15 +34,16 @@ const getGeoPointsO = (
     ),
   ]);
 
-export const getMockMeasurements = (
+export const createMockMeasurements = (
   maxValue: WeightObject,
   date: {
     minDate: Date,
     maxDate: Date
   },
-): Array<IMeasurement> => geoPoints.map((p) => ({
-  latitude: p[0],
-  longitude: p[1],
+  positions: FeatureCollection<Point>,
+): Array<IMeasurement> => positions.features.map((f: Feature<Point>) => ({
+  latitude: f.geometry.coordinates[0],
+  longitude: f.geometry.coordinates[1],
   props: {
     value: Object.fromEntries(
       Object.entries(maxValue).map(([k, v]) => [k, Math.random() * v])

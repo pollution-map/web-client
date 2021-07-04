@@ -31,6 +31,6 @@ export class MapStore {
 
   get isZoomedNear(): boolean {
     const { zoom } = this.viewState;
-    return zoom !== undefined && zoom > 12;
+    return zoom !== undefined && zoom > 11;
   }
 }
