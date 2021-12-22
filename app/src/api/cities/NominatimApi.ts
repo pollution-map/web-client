@@ -35,7 +35,7 @@ export class NominatimApi implements ICitiesApi {
       .catch((err) => {
         errorMsg = err.message;
       });
-    
+    errorMsg = "true";
     if (errorMsg) {
       const fallbackBorders = getFallbackBorders(cityName);
       if (fallbackBorders) return fallbackBorders;
