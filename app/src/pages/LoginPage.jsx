@@ -1,3 +1,3 @@
-import Login from 'src/components/login/Login';
+import Login from 'src/components/auth/Login';
 
 export const LoginPage = () => <Login />;

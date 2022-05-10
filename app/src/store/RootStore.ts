@@ -4,9 +4,7 @@ import {
   FilteredMeasurementsStore,
   IFilteredMeasurementsStore
 } from './data/FilteredMeasurementsStore';
-import {
-  MockMeasurementsStore
-} from './data/MeasurementsStore';
+import { MockMeasurementsStore } from './data/MeasurementsStore';
 import { CitiesStore } from './ui/CitiesStore';
 import { LayersStore } from './ui/deck/LayersStore';
 import { MapStore } from './ui/deck/MapStore';
@@ -14,6 +12,8 @@ import { PickInfoStore } from './ui/deck/PickInfoStore';
 import { IsolinesStore } from './ui/IsolinesStore';
 import { ModesStore } from './ui/ModesStore';
 import { RangesStore } from './ui/RangesStore';
+import { DatasetsStore } from './ui/DatasetsStore';
+import { UserStore } from './ui/UserStore';
 
 export class RootStore {
   // -- api --
@@ -21,6 +21,10 @@ export class RootStore {
 
   // -- data --
   filteredMeasurementsStore: IFilteredMeasurementsStore;
+  datasetsStore: DatasetsStore;
+
+  // --  user  --
+  userStore: UserStore;
 
   // --  ui  --
   modesStore: ModesStore;
@@ -40,6 +44,15 @@ export class RootStore {
     // -- data --
     this.filteredMeasurementsStore = new FilteredMeasurementsStore(
       makeAutoObservable(new MockMeasurementsStore())
+    );
+    this.datasetsStore = new DatasetsStore(this.apiStore.mapService);
+
+    // --  ui elements  --
+
+    // --  user  --
+    this.userStore = new UserStore(
+      this.apiStore.authService,
+      this.apiStore.mapService
     );
 
     // --  ui  --

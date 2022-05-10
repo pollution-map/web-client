@@ -46,7 +46,6 @@ export class CitiesStore {
       this.loadCityData(this.SelectedCity?.name as string).then((cityData) => {
         runInAction(() => {
           this.loadingError = cityData.error;
-          console.log(`loading error ${cityData.error}`);
         });
       });
     });

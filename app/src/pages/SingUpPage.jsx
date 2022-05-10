@@ -1,3 +1,3 @@
-import SingUp from 'src/components/login/SingUp';
+import SingUp from 'src/components/auth/SingUp';
 
 export const SingUpPage = () => <SingUp />;

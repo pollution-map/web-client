@@ -21,7 +21,7 @@ const StyledCard = styled(Card)`
     transition: margin-bottom 0.5s, width 0.5s;
   }
   &:not(:hover) {
-    margin-bottom: -200px;
+    margin-bottom: -150px;
     width: 220px;
     transition: margin-bottom 0.2s, width 0.2s;
   }
