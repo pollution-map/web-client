@@ -140,7 +140,6 @@ export class UserStore {
     this.setLoading(true);
     try {
       const response = await this.mapService.mapUpdate(id, name);
-      debugger;
       for (let i = 0; i < this.user.maps.length; i++) {
         if (this.user.maps[i].id === id) {
           this.user.maps.splice(i, 1, response.data);

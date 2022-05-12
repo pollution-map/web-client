@@ -32,7 +32,6 @@ const AddCard = ({ addMap }) => {
     minLength: 0,
     maxLength: 100,
   });
-
   const handleClose = () => {
     setOpen(false);
   };

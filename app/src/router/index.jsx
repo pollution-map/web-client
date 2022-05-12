@@ -7,17 +7,17 @@ import { RegistrationCompletedPage } from 'src/pages/RegistrationCompletedPage';
 import { SingUpPage } from 'src/pages/SingUpPage';
 
 export const baseRoutes = [
-  // { path: '/pollutionmap', element: <MapPage /> }
+  { path: '/pollutionmap', element: <MapPage /> },
   { path: '/map-viewing/:id', element: <MapViewingPage /> },
 ];
 // Последний элемент будет страницей по умолчанию!
 export const privateRoutes = baseRoutes
   .concat([
-    { path: '/person-alaccount', element: <PersonalAccountPage /> },
     {
       path: '/map-redactor/:id',
       element: <MapRedactorPage />,
     },
+    { path: '/person-alaccount', element: <PersonalAccountPage /> },
   ])
   .reverse();
 export const publicRoutes = baseRoutes

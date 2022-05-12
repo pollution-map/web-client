@@ -52,8 +52,8 @@ const useValidation = (value, validations) => {
   }, [value]);
   const errorMessage = {
     isEmpty: 'Поле пустое',
-    minLength: 'Пароль должен быть длиннее 6 символов',
-    maxLength: 'Пароль должен быть короче',
+    minLength: 'Поле должно быть длиннее 6 символов',
+    maxLength: 'Поле должно быть короче',
     isEmail: 'Введенный Email некорректен',
   };
 

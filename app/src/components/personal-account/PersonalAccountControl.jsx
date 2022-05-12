@@ -37,10 +37,10 @@ const StHeader = styled.header`
 `;
 
 const actions = [
-  { icon: <DesktopWindowsIcon />, name: 'Viewing', operation: 'viewing' },
+  { icon: <DesktopWindowsIcon />, name: 'View', operation: 'viewing' },
   {
     icon: <HandymanRoundedIcon />,
-    name: 'Redactor',
+    name: 'Edit',
     operation: 'redactor',
   },
   {
@@ -97,6 +97,14 @@ const PersonalAccountControl = () => {
 
   const logoutUser = (fromAllDevices) => {
     userStore.logout(fromAllDevices);
+    // eslint-disable-next-line no-unused-expressions
+    fromAllDevices
+      ? enqueueSnackbar('Вы вышли из системы со всех браузеров', {
+          variant: 'success',
+        })
+      : enqueueSnackbar('Вы вышли из системы', {
+          variant: 'success',
+        });
   };
 
   useEffect(() => {
