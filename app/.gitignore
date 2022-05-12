@@ -26,4 +26,3 @@ react-app-env.d.ts
 
 src/components/unused
 .vscode
-.env

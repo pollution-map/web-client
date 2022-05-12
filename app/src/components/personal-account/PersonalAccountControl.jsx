@@ -26,6 +26,11 @@ const StWrapper = styled.body`
 const StLink = styled(Link)`
   text-decoration: none;
   margin-left: 1vh;
+  margin-top: auto;
+  margin-bottom: auto;
+`;
+const StUserInfo = styled.div`
+  padding-right: 5vh;
 `;
 const StContentContainer = styled.div`
   margin-left: 5vh;
@@ -34,6 +39,8 @@ const StContentContainer = styled.div`
 const StHeader = styled.header`
   border-bottom: 1px solid #dadce0;
   padding-left: 5vh;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const actions = [
@@ -126,7 +133,7 @@ const PersonalAccountControl = () => {
       navigator.clipboard.writeText(
         `${window.location.href.slice(
           0,
-          window.location.href.indexOf('/person-alaccount')
+          window.location.href.indexOf('/person-account')
         )}/map-viewing/${id}`
       );
     }
@@ -141,12 +148,6 @@ const PersonalAccountControl = () => {
   return (
     <StWrapper>
       <StHeader>
-        <UserInfoComponent
-          email={userStore.user?.email}
-          userName={userStore.user?.userName}
-          logoutUser={logoutUser}
-        />
-
         <Tooltip title={<h3>Пример</h3>} placement="bottom">
           <StLink to="/pollutionmap">
             <Button variant="contained" startIcon={<MapOutlinedIcon />}>
@@ -154,6 +155,13 @@ const PersonalAccountControl = () => {
             </Button>
           </StLink>
         </Tooltip>
+        <StUserInfo>
+          <UserInfoComponent
+            email={userStore.user?.email}
+            userName={userStore.user?.userName}
+            logoutUser={logoutUser}
+          />
+        </StUserInfo>
       </StHeader>
       <StContentContainer>
         <UserMapsComponent

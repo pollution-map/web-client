@@ -34,7 +34,7 @@ const MapRedactorControl = () => {
 
     autorun(() => {
       if (!datasetsStore.isLoading && datasetsStore.map.id === undefined) {
-        navigate('/person-alaccount');
+        navigate('/person-account');
       }
     });
   }, []);

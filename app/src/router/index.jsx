@@ -17,13 +17,13 @@ export const privateRoutes = baseRoutes
       path: '/map-redactor/:id',
       element: <MapRedactorPage />,
     },
-    { path: '/person-alaccount', element: <PersonalAccountPage /> },
+    { path: '/person-account', element: <PersonalAccountPage /> },
   ])
   .reverse();
 export const publicRoutes = baseRoutes
   .concat([
     { path: '/singup', element: <SingUpPage /> },
     { path: '/registration-completed', element: <RegistrationCompletedPage /> },
-    { path: '/login', element: <LoginPage /> },
+    { path: '/singin', element: <LoginPage /> },
   ])
   .reverse();

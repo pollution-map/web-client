@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
 const StWrapper = styled.div`
   width: 100%;
   position: relative;
@@ -72,7 +73,7 @@ const RegistrationCompleted = () => {
       <Tooltip title={<h4>Авторизация</h4>} placement="bottom">
         <Button startIcon={<PersonRoundedIcon />} variant="outlined">
           <Link
-            to="/login"
+            to="/singin"
             className="styledIcons"
             style={{ textDecoration: 'none', color: '#8cbae8' }}
           >

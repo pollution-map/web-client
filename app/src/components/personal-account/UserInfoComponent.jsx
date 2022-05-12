@@ -72,7 +72,7 @@ const UserInfoComponent = ({ userName, email, logoutUser }) => {
               display: 'block',
               position: 'absolute',
               top: 0,
-              left: 14,
+              right: 13,
               width: 10,
               height: 10,
               bgcolor: 'background.paper',
@@ -81,8 +81,8 @@ const UserInfoComponent = ({ userName, email, logoutUser }) => {
             },
           },
         }}
-        transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem>
           <Avatar /> {userName || email || 'User'}

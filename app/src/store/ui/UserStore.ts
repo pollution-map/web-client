@@ -1,11 +1,11 @@
 import { IUser } from 'src/models/user';
 import axios from 'axios';
-import { API_URL } from 'src/api/PMapApi';
+import { API_URL } from 'src/api/AxiosClient';
 import { makeAutoObservable } from 'mobx';
 import { IAuthService } from 'src/api/service/Auth/IAuthService';
 import { IMapService } from 'src/api/service/Maps/IMapService';
 import { IMap } from 'src/models/map';
-import { getCookie } from 'src/components/cookie/cookie';
+import { getCookie } from 'src/utils/cookie';
 
 export class UserStore {
   user = {} as IUser;

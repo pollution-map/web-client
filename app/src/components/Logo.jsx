@@ -1,9 +1,14 @@
-import { Logo as LogoIcon } from 'src/icons/Logo';
-import Control from 'src/components/Control';
+import { Link, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Paper';
-import styled from 'styled-components';
-import { Divider, Link, Typography } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import { Link as RLink } from 'react-router-dom';
+import Control from 'src/components/Control';
+import { Logo as LogoIcon } from 'src/icons/Logo';
+import styled from 'styled-components';
 
 const StyledCard = styled(Card)`
   border: 0 0 0 0;
@@ -21,7 +26,7 @@ const StyledCard = styled(Card)`
     transition: margin-bottom 0.5s, width 0.5s;
   }
   &:not(:hover) {
-    margin-bottom: -150px;
+    margin-bottom: -235px;
     width: 220px;
     transition: margin-bottom 0.2s, width 0.2s;
   }
@@ -53,6 +58,14 @@ const Caption = ({ children }) => (
   </div>
 );
 
+const StWrapperButton = styled.div`
+  margin-top: 5px;
+  margin-bottom: 5px;
+`;
+const StButton = styled(Button)`
+  width: 100%;
+`;
+
 const StyledLogoWrapper = styled.div`
   margin-top: 5px;
 `;
@@ -80,6 +93,20 @@ export const Logo = () => (
             Pollution Map &nbsp; <GitHubIcon />
           </StyledLink>
         </TextItem>
+        <Divider />
+        <StWrapperButton>
+          <Tooltip title={<h4>Авторизация</h4>} placement="bottom">
+            <StButton startIcon={<PersonRoundedIcon />} variant="outlined">
+              <RLink
+                to="/singin"
+                className="styledIcons"
+                style={{ textDecoration: 'none', color: '#8cbae8' }}
+              >
+                Sing in
+              </RLink>
+            </StButton>
+          </Tooltip>
+        </StWrapperButton>
       </TextBody>
     </StyledCard>
   </Control>

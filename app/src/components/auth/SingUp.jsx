@@ -1,6 +1,5 @@
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -152,19 +151,6 @@ const SingUp = () => {
               variant="outlined"
             />
           </div>
-          <Button
-            startIcon={<PersonRoundedIcon />}
-            variant="outlined"
-            style={{ marginRight: '10px' }}
-          >
-            <Link
-              to="/login"
-              className="styledIcons"
-              style={{ textDecoration: 'none', color: '#8cbae8' }}
-            >
-              Sing in
-            </Link>
-          </Button>
           <LoadingButton
             startIcon={<PersonAddAlt1RoundedIcon />}
             loading={userStore.isLoading}

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { AxiosResponse } from 'axios';
 import { IMap } from 'src/models/map';
 import { IResponse } from 'src/models/response';
-import { api } from '../../PMapApi';
+import { api } from '../../AxiosClient';
 import { IMapService } from './IMapService';
 
 export class MapService implements IMapService {

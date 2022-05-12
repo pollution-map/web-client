@@ -19,11 +19,11 @@ const StTab = styled(Tab)`
   cursor: pointer;
 `;
 const pageMenu = [
-  { id:  0, path: '/login', label: 'Sing in', icon: <PersonRoundedIcon /> },
+  { id:  0, path: '/singin', label: 'Sing in', icon: <PersonRoundedIcon /> },
   {
     id: 1,
     path: '/singup',
-    label: 'Sing un',
+    label: 'Sing up',
     icon: <PersonAddAlt1RoundedIcon />,
   },
 ];

@@ -1,5 +1,4 @@
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
-import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Button from '@mui/material/Button';
@@ -31,7 +30,7 @@ const Login = () => {
       if (userStore.message === 'null') return;
       if (userStore.message === 'login' && !userStore.isLoading) {
         userStore.message = 'null';
-        navigate('/person-alaccount');
+        navigate('/person-account');
         enqueueSnackbar('Вход в систему прошел успешно', {
           variant: 'success',
         });
@@ -103,19 +102,6 @@ const Login = () => {
               variant="outlined"
             />
           </div>
-          <Button
-            startIcon={<PersonAddAlt1RoundedIcon />}
-            variant="outlined"
-            style={{ marginRight: '10px' }}
-          >
-            <Link
-              to="/singup"
-              className="styledIcons"
-              style={{ textDecoration: 'none', color: '#8cbae8' }}
-            >
-              Sing up
-            </Link>
-          </Button>
           <LoadingButton
             startIcon={<PersonRoundedIcon />}
             loading={userStore.isLoading}

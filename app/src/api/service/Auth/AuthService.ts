@@ -2,7 +2,7 @@ import axios from 'axios';
 import { AxiosResponse } from 'axios';
 import { IAuthResponse } from 'src/models/auth-response';
 import { IUser } from 'src/models/user';
-import { api } from '../../PMapApi';
+import { api } from '../../AxiosClient';
 import { IAuthService } from './IAuthService';
 
 export class AuthService implements IAuthService {

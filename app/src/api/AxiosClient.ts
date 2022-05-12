@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCookie } from 'src/components/cookie/cookie';
+import { getCookie } from 'src/utils/cookie';
 import { IAuthResponse } from 'src/models/auth-response';
 
 export const API_URL = process.env.REACT_APP_PMAP_URL;

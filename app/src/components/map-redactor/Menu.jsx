@@ -107,7 +107,7 @@ const Menu = ({
                 title={<h4>Личный кабинет</h4>}
                 placement="bottom"
               >
-                <StLink to="/person-alaccount" className="styledIcons">
+                <StLink to="/person-account" className="styledIcons">
                   <Button variant="outlined" startIcon={<HomeIcon />}>
                     Home
                   </Button>
